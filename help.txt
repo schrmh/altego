@@ -1,0 +1,16 @@
+```!donkey for bot's time
+!rust for rustpasta
+!lcp help for this text
+!gnu <Linux> <GNU>, both are optional
+!linux
+For Admins:
+!coop
+  init <nameofgame> to init the channel and game for coop commands, first init by owner of server
+  adminadd <userid> to add admin able to add games and admins
+  adminrm <userid> to remove admins
+For standard users:
+!coop
+  join <nameofgame> join coop group
+  leave <nameofgame> to leave coop group
+  play <nameofgame> to mention people to play with in group
+  list to list all the games```
