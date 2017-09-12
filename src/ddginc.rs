@@ -25,12 +25,12 @@ pub fn read_ddg(res: &str, num: i8) -> String {
 			let t = com::replace(r"/l/\?kh=-1&uddg=",&s,"");
 			if t.contains("yahoo.com") == false {
 				if count == 0 {
-					sendhelp = format!("• <{}>",t);
+					sendhelp = format!("• {}\n<{}>",&ddg_result.title,t);
 					count += 1;
 				}
 				else
 				{
-					sendhelp = format!("{}\n• <{}>", sendhelp, t);
+					sendhelp = format!("{}\n• {}\n<{}>",sendhelp,&ddg_result.title,t);
 					count += 1;
 				}
 			}
@@ -55,19 +55,20 @@ fn open_ddg(res: &str) -> String {
 }
 
 struct Result {
+	title:	String,
 	link:	String
 }
 
 impl Result {
 	fn get_ddg_results(res: &str) -> Vec<Result> {
 	let doc: &str = &open_ddg(res);
-		Document::from(doc).find(Class("result__extras__url"))
+		Document::from(doc).find(Class("result__title"))
 			.map(|node| Result::new(&node)).collect()
 	}
 	fn new(node: &Node) -> Result {
 		let header = node.find(Name("a")).nth(0).unwrap();
 		let link = String::from(header.attr("href").unwrap());
-		Result { link: link }
+		Result { title: header.text(), link: link }
 	}
 }
 
