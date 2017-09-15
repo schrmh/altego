@@ -259,7 +259,7 @@ command!(info(_context, msg, args) {
 			let zz = com::replace(".txt", &yy, "");
 			if !zz.to_string().contains("_") {
 				
-				list = format!("{}\n{},",&mut list, zz);
+				list = format!("{}\n{}",&mut list, zz);
 			}
 
 		}
