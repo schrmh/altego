@@ -24,7 +24,6 @@ use rand::distributions::{IndependentSample, Range};
 use std::fs;
 
 mod ddginc;
-mod admin;
 mod coop;
 mod com;
 
@@ -87,133 +86,104 @@ fn main() {
 				.exec(hyperthink)))
 		.group("Coop", |g| g
 			.prefix("coop")
-			.command("coop", |c| c
-				.desc("Actually don't use it in this state")
-				.guild_only(true)
-				.usage("<distro name>")
-				.owners_only(true)
-				.exec(coop))));
+
+			.command("leave", |c| c
+				.desc("TFW hacked mainframe")
+				.exec(leave))
+			.command("play", |c| c
+				.desc("TFW hacked mainframe")
+				.exec(play))
+			.command("join", |c| c
+				.desc("TFW hacked mainframe")
+				.exec(join))
+			.command("list", |c| c
+				.desc("TFW hacked mainframe")
+				.exec(list)))); //I don't exactly know why reading server id doesn't work, TODO
 
 	let _ = client.start().map_err(|why| println!("Client ended: {:?}", why));
 }
 
-
-command!(coop(_ctx, msg, args) {
-	let argument = &args[0];
-	let game = &args[1];
+command!(list(_ctx, msg) {
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,
 		None => {
-			check_msg(msg.channel_id.say(&"Groups and DMs not supported"));
+			check_msg(msg.channel_id.say("Groups and DMs not supported"));
+
 			return Ok(());
 		},
 	};
-	let dir = format!("servers/{}",guild_id);
-	let gamedir=format!("{}/{}.txt",&dir,game);
 	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
-		let joinerror = format!("<@!{}>, I'm so terribly sorry, but I couldn't add you to {} group, you already exist in this group",msg.author.id, game);
-		let joinaccept = format!("<@!{}>, You got added to {} group, play with us anytime",msg.author.id, game);
-		let leaveerror = format!("<@!{}>, You got removed from {} group :crying_cat_face: ",msg.author.id, game);
-		let leaveaccept = format!("<@!{}>, You don't exist in {} group",msg.author.id, game);
-		let initdeny = format!("<@!{}>, I don't recognize you as my real daddy, where is my daddy?",msg.author.id);
-		let author = format!("{}",msg.author.id);
-		let god = format!("servers/{}.txt", guild_id);
-		if Path::new(&god).exists() == true || guild.read().unwrap().owner_id == msg.author.id{
-			let mut count = 0;
-			if Path::new(&god).exists() == false {
-				match File::create(&god){
-					Ok(val)  => val,
-					Err(err) => return Err(err.to_string()),
-				};
-			}
-			let mut file = File::open(&god).expect("opening file");
-			let mut text = String::new();
-			file.read_to_string(&mut text).expect("reading file");
-			for line in text.lines() {
-				if line == author{
-					count=count+1;
-				}
-			}
-			if guild.read().unwrap().owner_id == msg.author.id {
-				count=count+1;
-			}
-			if argument.eq_ignore_ascii_case("init") {
-				if count !=0{
-					if admin::init(&god, &author, &dir, &gamedir) == 0 {
-						check_msg(msg.channel_id.say(&&format!("Initializing bot chief <@!{}>", msg.author.id)));
-					}
-					else if admin::init(&god, &author, &dir, &gamedir) == 1 {
-						check_msg(msg.channel_id.say(&&format!("Initializing this channel chief <@!{}>", msg.author.id)));
-					}
-					else if admin::init(&god, &author, &dir, &gamedir) == 2 {
-						check_msg(msg.channel_id.say(&&format!("Adding {} to game database chief", game)));
-					}
-					else {
-						check_msg(msg.channel_id.say(&&format!("Fucking hell")));
-					}
-				}
-				else {
-					check_msg(msg.channel_id.say(&&initdeny));
-					let paths = vec!["camgirl.png"];
-					let _ = msg.channel_id.send_files(paths, |m| m.content(" "));
-				}
-			}
-			else if argument.eq_ignore_ascii_case("adminadd") {
-				if count !=0{
-					if admin::adminadd(&god, &game) == 0 {
-						check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
-					}
-					else {
-						check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
-					}
-				}
-				else {
-					check_msg(msg.channel_id.say(&&initdeny));
-					let paths = vec!["camgirl.png"];
-					let _ = msg.channel_id.send_files(paths, |m| m.content(" "));
-				}
-			}
-			else if argument.eq_ignore_ascii_case("adminrm") && count !=0 {
-				if count !=0{
-					if admin::adminrm(&god, &game) == 0 {
-						check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
-					}
-					else {
-						check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
-					}
-				}
-				else {
-					check_msg(msg.channel_id.say(&&initdeny));
-					let paths = vec!["camgirl.png"];
-					let _ = msg.channel_id.send_files(paths, |m| m.content(" "));
-				}
-			}
-		}
-		if argument.eq_ignore_ascii_case("leave") {
-			if coop::leave(author.clone(), &gamedir) == 0 {
-				check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
-			}
-			else {
-				check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
-			}
+		let dir = format!("servers/{}",guild_id);
+		check_msg(msg.channel_id.say(&coop::list(&dir)));
+	}
+});
 
+command!(join(_ctx, msg, args) {
+	let game = &args[0];
+	let joinerror = format!("<@!{}>, I'm so terribly sorry, but I couldn't add you to {} group, you already exist in this group",msg.author.id, game);
+	let joinaccept = format!("<@!{}>, You got added to {} group, play with us anytime",msg.author.id, game);
+	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().unwrap().guild_id,
+		None => {
+			check_msg(msg.channel_id.say("Groups and DMs not supported"));
+
+			return Ok(());
+		},
+	};
+	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+		let dir = format!("servers/{}",guild_id);
+		let gamedir=format!("{}/{}.txt",&dir,game);
+		if coop::join(msg.author.id.to_string(), &gamedir) != 1 {
+			check_msg(msg.channel_id.say(&&joinaccept));
 		}
-		else if argument.eq_ignore_ascii_case("play") {
-			check_msg(msg.channel_id.say(&coop::play(&gamedir, &game)));
-		}
-		else if argument.eq_ignore_ascii_case("join") {
-			if coop::join(author.clone(), &gamedir) != 1 {
-				check_msg(msg.channel_id.say(&&joinaccept));
-			}
-			else {
-				check_msg(msg.channel_id.say(&&joinerror));
-			}
-		}
-		else if argument.eq_ignore_ascii_case("list") {
-			check_msg(msg.channel_id.say(&coop::list(&dir)));
+		else {
+			check_msg(msg.channel_id.say(&&joinerror));
 		}
 	}
 });
+
+command!(leave(_ctx, msg, args) {
+	let game = &args[0];
+	let leaveerror = format!("<@!{}>, You got removed from {} group :crying_cat_face: ",msg.author.id, game);
+	let leaveaccept = format!("<@!{}>, You don't exist in {} group",msg.author.id, game);
+		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().unwrap().guild_id,
+		None => {
+			check_msg(msg.channel_id.say("Groups and DMs not supported"));
+
+			return Ok(());
+		},
+	};
+	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+		let dir = format!("servers/{}",guild_id);
+		let gamedir=format!("{}/{}.txt",&dir,game);
+		if coop::leave(msg.author.id.to_string(), &gamedir) == 0 {
+			check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
+		}
+		else {
+			check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
+		}
+	}
+
+});
+
+command!(play(_ctx, msg, args) {
+	let game = &args[0];
+		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().unwrap().guild_id,
+		None => {
+			check_msg(msg.channel_id.say("Groups and DMs not supported"));
+
+			return Ok(());
+		},
+	};
+	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+		let dir = format!("servers/{}",guild_id);
+		let gamedir=format!("{}/{}.txt",&dir,game);
+		check_msg(msg.channel_id.say(&coop::play(&gamedir, &game)));
+	}
+});
+
 
 command!(github(_context, msg) {
 	check_msg(msg.channel_id.say("I mean, Github something or other is like here or something:\nhttps://github.com/LelCP/altego"));
