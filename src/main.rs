@@ -112,10 +112,9 @@ command!(list(_ctx, msg) {
 			return Ok(());
 		},
 	};
-	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+	CACHE.read().unwrap().guild(guild_id);
 		let dir = format!("servers/{}",guild_id);
 		check_msg(msg.channel_id.say(&coop::list(&dir)));
-	}
 });
 
 command!(join(_ctx, msg, args) {
@@ -130,7 +129,7 @@ command!(join(_ctx, msg, args) {
 			return Ok(());
 		},
 	};
-	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+	CACHE.read().unwrap().guild(guild_id);
 		let dir = format!("servers/{}",guild_id);
 		let gamedir=format!("{}/{}.txt",&dir,game);
 		if coop::join(msg.author.id.to_string(), &gamedir) != 1 {
@@ -139,7 +138,6 @@ command!(join(_ctx, msg, args) {
 		else {
 			check_msg(msg.channel_id.say(&&joinerror));
 		}
-	}
 });
 
 command!(leave(_ctx, msg, args) {
@@ -154,7 +152,7 @@ command!(leave(_ctx, msg, args) {
 			return Ok(());
 		},
 	};
-	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+	CACHE.read().unwrap().guild(guild_id);
 		let dir = format!("servers/{}",guild_id);
 		let gamedir=format!("{}/{}.txt",&dir,game);
 		if coop::leave(msg.author.id.to_string(), &gamedir) == 0 {
@@ -163,7 +161,6 @@ command!(leave(_ctx, msg, args) {
 		else {
 			check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
 		}
-	}
 
 });
 
@@ -177,11 +174,10 @@ command!(play(_ctx, msg, args) {
 			return Ok(());
 		},
 	};
-	if let Some(guild) = CACHE.read().unwrap().guild(guild_id) {
+	CACHE.read().unwrap().guild(guild_id);
 		let dir = format!("servers/{}",guild_id);
 		let gamedir=format!("{}/{}.txt",&dir,game);
 		check_msg(msg.channel_id.say(&coop::play(&gamedir, &game)));
-	}
 });
 
 
