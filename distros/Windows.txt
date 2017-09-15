@@ -1,0 +1,20 @@
+https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Windows_logo_-_2012.svg/480px-Windows_logo_-_2012.svg.png
+#3316724
+**Microsoft Windows** is a MS-DOS based OS. It is the single most popular Operatingsystem to date, but has virus and privacy issues.
+**Notable features**
+- Microsoft Cortana, your own personal voice assistant, free of charge!
+- DirectX, a way to render 3d applications, Windows only.
+- Support, any problem you face on windows has already been solved or is beeing solved.
+**Available Versions**
+- Currently supported versions: Vista,7,8/8.1,10
+- Pro/Enterprise editions
+**Drawbacks**
+- Has alot of privacy issues
+- A big target for viruses
+- Closed source
+- Paid
+- Forced updates
+**More info**
+https://www.microsoft.com/en-us/windows
+https://en.wikipedia.org/wiki/Microsoft_Windows
+https://thenextweb.com/microsoft/2015/07/29/wind-nos/
