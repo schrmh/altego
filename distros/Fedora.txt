@@ -1,4 +1,4 @@
-http://www.itzgeek.com/wp-content/uploads/2012/01/Fedora-Logo.jpg
+https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Fedora-logo.svg/600px-Fedora-logo.svg.png
 #14734
 **Fedora** is a stable release based Linux distribution developed by the community-supported Fedora Project and sponsored by the Red Hat company. The Fedora PRoject releases a new version of Fedora every six months and provides updated packages to these releases for 13 months.
 
@@ -29,4 +29,4 @@ https://fedoraproject.org/
 https://getfedora.org/
 https://reddit.com/r/fedora
 https://discord.gg/fedora
-#fedora on freenode
+fedora on freenode
