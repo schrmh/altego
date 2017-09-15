@@ -1,6 +1,6 @@
 https://image.spreadshirtmedia.net/image-server/v1/designs/4359133,width=178,height=178/men-s-polo-green-badge.png
 #5812293
-**openSUSE Tumbleweed** is community driven rolling release distro, one of the if not the most stable and tested rolling distributions available. Thanks to automated testing developers of Tumbleweed can test packages and push them out much faster than any other distro.
+**openSUSE Tumbleweed** is rolling release distro, one of the if not the most stable and tested rolling distributions available. Thanks to automated testing mainteiners of Tumbleweed can test packages and push them out much faster than any other distro.
 **Notable features**
 - Yast2, powerful system management tool
 - Zypper, powerful Package Manager

@@ -1,0 +1,9 @@
+<URL to image in PNG form (I set it up this way for transparency goodness)>
+#<RGB int from https://www.shodor.org/stella2java/rgbint.html>
+**<Name of distro>** is <description of distro>
+**Notable features**
+- <List of things>
+**Available DEs**
+- <Another list of things>
+**More info**
+<URL to distro page>
