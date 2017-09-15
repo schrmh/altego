@@ -39,25 +39,45 @@ fn main() {
 		.configure(|c| c
 			.prefix("!")
 			.on_mention(true))
-		.group("miscellaneous", |g| g
+		.group("Miscellaneous", |g| g
 			.command("gnu", |c| c
 				.exec(gnu))
-			.command("pong", |c| c.exec_str("ping!")))
-		.on("ddg", ddg)
-		.on("rust", rust)
-		.on("emoji", emoji)
-		.on("tumbleweed", tw)
-		.on("gnome", gnome)
-		.on("github", github)
-		.on("roasted", roasted)
-		.on("hypertux", hypertux)
-		.on("hyperthink", hyperthink)
-		.on("lcp help", lcphelp)
-		.on("whiteface", whiteface)
-		.on("coop", coop)
-		.on("info", info)
-		.on("godtellmeyourways", god)
-		.on("donkey", donkey));//Needs to be rewritten for "command" struct replacing "on"
+			.command("lcp help", |c| c
+				.exec(lcphelp))
+			.command("whiteface", |c| c
+				.exec(whiteface))
+			.command("godtellmeyourways", |c| c
+				.exec(god))
+			.command("donkey", |c| c
+				.exec(donkey)))
+		.group("Useful shit", |g| g
+			.command("ddg", |c| c
+				.exec(ddg))
+			.command("emoji", |c| c
+				.exec(emoji))
+			.command("info", |c| c
+				.exec(info)))
+		.group("Shill", |g| g
+			.command("github", |c| c
+				.exec(github))
+			.command("gnome", |c| c
+				.exec(gnome))
+			.command("tumbleweed", |c| c
+				.exec(tw))
+			.command("rust", |c| c
+				.exec(rust)))
+		.group("Tux", |g| g
+			.command("roasted", |c| c
+				.exec(roasted))
+			.command("hypertux", |c| c
+				.exec(hypertux))
+			.command("hyperthink", |c| c
+				.exec(hyperthink))
+			.command("rust", |c| c
+				.exec(rust)))
+		.group("Coop", |g| g
+			.command("coop", |c| c
+				.exec(coop))));
 
 	let _ = client.start().map_err(|why| println!("Client ended: {:?}", why));
 }
@@ -264,7 +284,7 @@ command!(info(_context, msg, args) {
 						if line.contains(".png") {
 							image = line.to_string();
 						}
-						else if line.contains("http") {
+						else if line.contains("http") && adress == "" {
 							adress = line.to_string();
 							fulltext = format!("{}\n{}",fulltext, line.to_string());
 						}
