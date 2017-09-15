@@ -1,0 +1,32 @@
+http://www.itzgeek.com/wp-content/uploads/2012/01/Fedora-Logo.jpg
+#14734
+**Fedora** is a stable release based Linux distribution developed by the community-supported Fedora Project and sponsored by the Red Hat company. The Fedora PRoject releases a new version of Fedora every six months and provides updated packages to these releases for 13 months.
+
+**Fedora Editions**
+Fedora is available in three different editions:
+**Fedora Workstation** for personal computers,
+**Fedora Server** for servers,
+**Fedora Atomic** for cloud computing.
+
+**Bragging Rights**
+-dnf, simple to use package manager that does everything you expect it to do.
+-rpm, Red Hat package manager, right from RHEL itself.
+-SELinux, provides a strong, flexible, mandatory access control architecture.
+-Large community of adoring users who contribute in many different ways.
+
+**Available DEs**
+Fedora is available in:
+-Gnome
+-KDE
+-XFCE
+-LXDE
+-LXQT
+-MATE-COMPIZ
+-CINNAMON
+
+**More Info**
+https://fedoraproject.org/
+https://getfedora.org/
+https://reddit.com/r/fedora
+https://discord.gg/fedora
+#fedora on freenode
