@@ -1,0 +1,19 @@
+https://image.spreadshirtmedia.net/image-server/v1/designs/4359133,width=178,height=178/men-s-polo-green-badge.png
+#5812293
+**openSUSE Tumbleweed** is community driven rolling release distro, one of the if not the most stable and tested rolling distributions available. Thanks to automated testing developers of Tumbleweed can test packages and push them out much faster than any other distro.
+**Notable features**
+- Yast2, powerful system management tool
+- Zypper, powerful Package Manager
+- OBS, easily build and install your favourite apps
+- Snapper, snapshots to reverse changes on system
+**Available DEs**
+- KDE
+- Gnome
+- Mate
+- Enlightenment
+- LXDE
+- LXqt
+- XFCE
+- Pantheon
+**More info**
+https://www.opensuse.org/

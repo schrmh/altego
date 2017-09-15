@@ -7,9 +7,7 @@ extern crate time;
 
 use std::string::*;
 use serenity::client::CACHE;
-use serenity::framework::StandardFramework;
 use serenity::model::*;
-use serenity::prelude::*;
 use serenity::Result as SerenityResult;
 use serenity::Client;
 use std::env;
@@ -23,6 +21,7 @@ use serenity::utils::Colour;
 use serenity::utils::builder::CreateEmbedFooter;
 use rand::distributions::{IndependentSample, Range};
 use std::time::{SystemTime, UNIX_EPOCH};
+use std::fs;
 
 mod ddginc;
 mod admin;
@@ -31,33 +30,31 @@ mod com;
 
 static mut USERS_TIMEOUT: u64 = 5;
 
-struct Handler;
-
-impl EventHandler for Handler {
-	fn on_ready(&self, _: Context, ready: Ready) {
-		println!("{} is connected!", ready.user.name);
-	}
-}
-
 fn main() {
 	let token = env::var("DISCORD_TOKEN")
 		.expect("Expected a token in the environment");
-	let mut client = Client::new(&token, Handler);
+	let mut client = Client::new(&token);
 	
-	client.with_framework(StandardFramework::new()
+	client.with_framework(|f| f
 		.configure(|c| c
 			.prefix("!")
 			.on_mention(true))
-		.on("gnu", gnu)
+		.group("miscellaneous", |g| g
+			.command("gnu", |c| c
+				.exec(gnu))
+			.command("pong", |c| c.exec_str("ping!")))
 		.on("ddg", ddg)
 		.on("rust", rust)
 		.on("emoji", emoji)
+		.on("tumbleweed", tw)
+		.on("gnome", gnome)
 		.on("roasted", roasted)
 		.on("hypertux", hypertux)
 		.on("hyperthink", hyperthink)
 		.on("lcp help", lcphelp)
 		.on("whiteface", whiteface)
 		.on("coop", coop)
+		.on("info", info)
 		.on("godtellmeyourways", god)
 		.on("donkey", donkey));//Needs to be rewritten for "command" struct replacing "on"
 
@@ -72,7 +69,7 @@ command!(coop(_ctx, msg) {
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,
 		None => {
-			check_msg(msg.channel_id.say("Groups and DMs not supported"));
+			check_msg(msg.channel_id.say(&"Groups and DMs not supported"));
 			return Ok(());
 		},
 	};
@@ -108,20 +105,20 @@ command!(coop(_ctx, msg) {
 			if argument.eq_ignore_ascii_case("init") {
 				if count !=0{
 					if admin::init(&god, &author, &dir, &gamedir) == 0 {
-						check_msg(msg.channel_id.say(&format!("Initializing bot chief <@!{}>", msg.author.id)));
+						check_msg(msg.channel_id.say(&&format!("Initializing bot chief <@!{}>", msg.author.id)));
 					}
 					else if admin::init(&god, &author, &dir, &gamedir) == 1 {
-						check_msg(msg.channel_id.say(&format!("Initializing this channel chief <@!{}>", msg.author.id)));
+						check_msg(msg.channel_id.say(&&format!("Initializing this channel chief <@!{}>", msg.author.id)));
 					}
 					else if admin::init(&god, &author, &dir, &gamedir) == 2 {
-						check_msg(msg.channel_id.say(&format!("Adding {} to game database chief", game)));
+						check_msg(msg.channel_id.say(&&format!("Adding {} to game database chief", game)));
 					}
 					else {
-						check_msg(msg.channel_id.say(&format!("Fucking hell")));
+						check_msg(msg.channel_id.say(&&format!("Fucking hell")));
 					}
 				}
 				else {
-					check_msg(msg.channel_id.say(&initdeny));
+					check_msg(msg.channel_id.say(&&initdeny));
 					let paths = vec!["camgirl.png"];
 					let _ = msg.channel_id.send_files(paths, |m| m.content(" "));
 				}
@@ -129,14 +126,14 @@ command!(coop(_ctx, msg) {
 			else if argument.eq_ignore_ascii_case("adminadd") {
 				if count !=0{
 					if admin::adminadd(&god, &game) == 0 {
-						check_msg(msg.channel_id.say(&format!("{}",leaveaccept)));
+						check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
 					}
 					else {
-						check_msg(msg.channel_id.say(&format!("{}",leaveerror)));
+						check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
 					}
 				}
 				else {
-					check_msg(msg.channel_id.say(&initdeny));
+					check_msg(msg.channel_id.say(&&initdeny));
 					let paths = vec!["camgirl.png"];
 					let _ = msg.channel_id.send_files(paths, |m| m.content(" "));
 				}
@@ -144,14 +141,14 @@ command!(coop(_ctx, msg) {
 			else if argument.eq_ignore_ascii_case("adminrm") && count !=0 {
 				if count !=0{
 					if admin::adminrm(&god, &game) == 0 {
-						check_msg(msg.channel_id.say(&format!("{}",leaveaccept)));
+						check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
 					}
 					else {
-						check_msg(msg.channel_id.say(&format!("{}",leaveerror)));
+						check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
 					}
 				}
 				else {
-					check_msg(msg.channel_id.say(&initdeny));
+					check_msg(msg.channel_id.say(&&initdeny));
 					let paths = vec!["camgirl.png"];
 					let _ = msg.channel_id.send_files(paths, |m| m.content(" "));
 				}
@@ -159,35 +156,41 @@ command!(coop(_ctx, msg) {
 		}
 		if argument.eq_ignore_ascii_case("leave") {
 			if coop::leave(author.clone(), &gamedir) == 0 {
-				check_msg(msg.channel_id.say(&format!("{}",leaveaccept)));
+				check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
 			}
 			else {
-				check_msg(msg.channel_id.say(&format!("{}",leaveerror)));
+				check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
 			}
 
 		}
 		else if argument.eq_ignore_ascii_case("play") {
-			check_msg(msg.channel_id.say(coop::play(&gamedir, &game)));
+			check_msg(msg.channel_id.say(&coop::play(&gamedir, &game)));
 		}
 		else if argument.eq_ignore_ascii_case("join") {
 			if coop::join(author.clone(), &gamedir) != 1 {
-				check_msg(msg.channel_id.say(&joinaccept));
+				check_msg(msg.channel_id.say(&&joinaccept));
 			}
 			else {
-				check_msg(msg.channel_id.say(&joinerror));
+				check_msg(msg.channel_id.say(&&joinerror));
 			}
 		}
 		else if argument.eq_ignore_ascii_case("list") {
-			check_msg(msg.channel_id.say(coop::list(&dir)));
+			check_msg(msg.channel_id.say(&coop::list(&dir)));
 		}
 	}
 });
 
 command!(rust(_context, msg) {
-	check_msg(msg.channel_id.say(com::read_to_string("rust.txt")));
+	check_msg(msg.channel_id.say(&com::read_to_string("rust.txt")));
+});
+command!(tw(_context, msg) {
+	check_msg(msg.channel_id.say(&com::read_to_string("tumbleweed.txt")));
+});
+command!(gnome(_context, msg) {
+	check_msg(msg.channel_id.say(&com::read_to_string("gnome.txt")));
 });
 command!(lcphelp(_context, msg) {
-	check_msg(msg.channel_id.say(com::read_to_string("help.txt")));
+	check_msg(msg.channel_id.say(&com::read_to_string("help.txt")));
 });
 
 command!(roasted(_context, msg) {
@@ -208,13 +211,72 @@ command!(hyperthink(_context, msg) {
 
 });
 
-command!(gnu(_context, msg) {
+command!(gnu(_context, msg, args) {
 	let paths = vec!["interjection.png"];
-	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&com::gnu_replacement(&msg.content))));
+	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&com::gnu_replacement(args.to_vec()))));
 
 });
 command!(whiteface(_context, msg) {
-	check_msg(msg.channel_id.say("https://i.redd.it/fhrd8f2gpxjz.gif"));
+	check_msg(msg.channel_id.say(&"https://i.redd.it/fhrd8f2gpxjz.gif"));
+});
+
+command!(info(_context, msg, args) {
+	if args.len() == 0 {
+		let paths = fs::read_dir("distros").unwrap();
+		let mut list = format!("**You can learn about:**");
+		for path in paths {
+			let welp = path.unwrap().path().display().to_string().clone();
+			let xx = com::replace("distros", &welp, "");
+			let yy = com::replace("/", &xx, "");
+			let zz = com::replace(".txt", &yy, "");
+			if !zz.to_string().contains(".png") {
+				
+				list = format!("{}\n{},",&mut list, zz);
+			}
+
+		}
+	check_msg(msg.channel_id.say(&list));
+	}
+	else {
+		let mut adress = "".to_string();
+		let mut image = "".to_string();
+		let mut colour = Colour::new(0);
+		let mut distro = &args[0];
+		let paths = fs::read_dir("distros").unwrap();
+		for path in paths {
+			let welp = path.unwrap().path().display().to_string().clone();
+			let xx = com::replace("distros", &welp, "");
+			let yy = com::replace("/", &xx, "");
+			let zz = com::replace(".txt", &yy, "");
+			if distro.eq_ignore_ascii_case(&zz) {
+				let mut fulltext = "".to_string();
+				let text = com::read_to_string(&format!("distros/{}.txt",&zz));
+				for line in text.to_string().lines() {
+					if line.contains(".png") {
+						image = line.to_string();
+					}
+					else if line.contains("http") {
+						adress = line.to_string();
+						fulltext = format!("{}\n{}",fulltext, line.to_string());
+					}
+					else if line.contains("#") {
+						colour = Colour::new(com::replace("#", &line, "").parse::<u32>().unwrap());
+					}
+					else {
+						fulltext = format!("{}\n{}",fulltext, line.to_string());
+					}
+				}
+				let _ = msg.channel_id.send_message(|m| m
+					.embed(|e| e
+					.title(&zz)
+					.color(colour)
+					.thumbnail(&image)
+					.description(&fulltext)
+					.url(&adress)
+				));
+			}
+		}
+	}
 });
 
 command!(emoji(_context, msg, args) {
@@ -286,9 +348,9 @@ command!(emoji(_context, msg, args) {
 	if hello.len() < 2000 {
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
-			.title(format!("{}",msg.author.name))
+			.title(&format!("{}",msg.author.name))
 			.colour(Colour::from_rgb(0, 80, 80))
-			.description(format!("{}\n{}",hello,world))
+			.description(&format!("{}\n{}",hello,world))
 		));
 		unsafe{USERS_TIMEOUT = since_the_epoch.as_secs() + 60};
 	}
@@ -320,11 +382,11 @@ command!(ddg(_context, msg) {
 			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
-			.title(format!("Based on {} article",&response.definition_source))
+			.title(&format!("Based on {} article",&response.definition_source))
 			.footer(|_| footer)
 			.colour(colour)
 			.thumbnail(&response.image)
-			.description(format!("{}\n\n*Read more:* <{}>",&response.definition,&response.definition_url))
+			.description(&format!("{}\n\n*Read more:* <{}>",&response.definition,&response.definition_url))
 			.url(&new)
 			));
 	}
@@ -334,11 +396,11 @@ command!(ddg(_context, msg) {
 			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
-			.title(format!("Based on {} article",&response.abstract_source))
+			.title(&format!("Based on {} article",&response.abstract_source))
 			.colour(colour)
 			.footer(|_| footer)
 			.thumbnail(&response.image)
-			.description(format!("{}\n\n*Read more:* <{}>",&response.abstract_text,&response.abstract_url))
+			.description(&format!("{}\n\n*Read more:* <{}>",&response.abstract_text,&response.abstract_url))
 			.url(&new)
 			));
 	}
@@ -352,7 +414,7 @@ command!(ddg(_context, msg) {
 			.footer(|_| footer)
 			.colour(colour)
 			.thumbnail(&response.image)
-			.description(format!("{}",&response.redirect))
+			.description(&format!("{}",&response.redirect))
 			.url(&new)
 			));
 	}
@@ -362,11 +424,11 @@ command!(ddg(_context, msg) {
 			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
-			.title(format!("Results from :duck::duck::goal: for query \"{}\"",&help))
+			.title(&format!("Results from :duck::duck::goal: for query \"{}\"",&help))
 			.footer(|_| footer)
 			.colour(colour)
 			.url(&new)
-			.description(ddginc::read_ddg(&help, 3))
+			.description(&ddginc::read_ddg(&help, 3))
 			));
 	}
 });
@@ -401,11 +463,11 @@ command!(god(_ctx, msg) {
 			.icon_url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Heckert_GNU_white.svg/220px-Heckert_GNU_white.svg.png");
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
-			.title(format!("He has spoken!"))
+			.title(&format!("He has spoken!"))
 			.colour(colour)
 			.footer(|_| footer)
 			.thumbnail("http://i1-news.softpedia-static.com/images/news2/Richard-Stallman-Says-He-Created-GNU-Which-Is-Called-Often-Linux-482416-2.jpg")
-			.description(format!("{}",&lineset))
+			.description(&format!("{}",&lineset))
 			.url("https://stallman.org/")
 			));
 });
@@ -414,7 +476,7 @@ command!(donkey(ctx, msg) {
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,
 		None => {
-			check_msg(msg.channel_id.say("Groups and DMs not supported"));
+			check_msg(msg.channel_id.say(&"Groups and DMs not supported"));
 			return Ok(());
 		},
 	};
@@ -423,7 +485,7 @@ command!(donkey(ctx, msg) {
 	
 	let now = Local::now();
 	let dt=format!("{}", now.format("Kong! %Y-%m-%d %H:%M:%S").to_string());
-	check_msg(msg.channel_id.say(&format!("{}, <@!{}>", dt,user_id )));
+	check_msg(msg.channel_id.say(&&format!("{}, <@!{}>", dt,user_id )));
 	match guild_id.edit_nickname(Some("ԀƆ˥")) {
 		Ok(val)  => val,
 		Err(err) => return Err(err.to_string()),

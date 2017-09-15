@@ -1,0 +1,13 @@
+**Gnome** is a desktop environment for modern *nix systems that runs blazingly fast, prevents suicides, and guarantees ease of use.
+**Featuring:**
+zero-cost installation
+move every element of UI
+guaranteed extentions for your needs
+no loose threads in UX
+easily extandable traits
+easy theming
+no compatibility issues
+minimal runtime
+efficient key combinations
+**Read more:**
+<https://www.gnome.org/>

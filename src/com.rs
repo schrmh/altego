@@ -4,6 +4,7 @@ use std::string::*;
 use std::fs::File;
 use std::io::Read;
 use self::regex::Regex;
+use std::ascii::AsciiExt;
 
 pub fn replace(replaced: &str, replacement: &str,replacing: &str) -> String {
 	let re = match Regex::new(replaced) {
@@ -20,26 +21,21 @@ pub fn read_to_string(filename: &str) -> String {
 	return rustext.to_string();
 }
 
-pub fn gnu_replacement(content: &str) -> String {
-	let mut split = content.split(' ');
-	let argument = split.nth(1).unwrap_or("");
-	let game = split.next().unwrap_or("");
+pub fn gnu_replacement(content: Vec<String>) -> String {
+	let first = &content[0];
+	let second = &content[1];
 	let mut gnu = File::open("gnu.txt").expect("opening file");
 	let mut gnutext = String::new();
 	gnu.read_to_string(&mut gnutext).expect("reading file");
-	let mut dude = argument.clone();
-	let mut pal = game.clone();
-	if game == "" {
-		pal = "GNU";
+	let mut first_preserved = first.clone().to_string();
+	let mut second_preserved = second.clone().to_string();
+	if second == "" {
+		second_preserved = "GNU".to_string();
 	}
-	if argument == "" {
-		dude = "Linux";
+	if first == "" {
+		first_preserved = "Linux".to_string();
 	}
-	if game == "Linux" {
-		pal = "🿽";
-	}
-	let xx = replace("GNU", &gnutext, pal);
-	let yy = replace("Linux", &xx, dude);
-	let zz = replace("🿽", &yy, game);
-	return replace("`", &zz, "");
+	let replacing_gnu = replace("GNU", &gnutext, &second_preserved);
+	let replacing_linux = replace("Linux", &replacing_gnu, &first_preserved);
+	return replace("`", &replacing_linux, "");
 }

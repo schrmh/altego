@@ -10,7 +10,7 @@ use com;
 
 pub fn join(author: String, gamedir: &str) -> u64 {
 	let mut a = 3;
-	if Path::new(&gamedir).exists() == true {
+	if Path::new(&gamedir).exists() {
 		let mut count = 0;
 		let mut file = File::open(&gamedir).expect("opening file");
 		let mut text = String::new();
