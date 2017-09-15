@@ -19,3 +19,5 @@ Thanks to *Patterns* :tm: and *1-Click Installs* :tm: Tumbleweed allows for much
 - Pantheon
 **More info**
 https://www.opensuse.org/
+https://www.reddit.com/r/openSUSE/
+https://youtu.be/SYRlTISvjww
