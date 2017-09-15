@@ -1,0 +1,19 @@
+http://distrowatch.com/images/yvzhuwbpy/nutyx.png
+#11759669
+**NuTyX** is a French Linux distribution (with multi-language support) built from parts of Linux From Scratch and Beyond Linux From Scratch. The OS uses a 'Cards' system to maintain a meticulous package system made to build and test binary and source packages or groups. This is an advanced GNU/Linux system.
+**Notable features**
+- Makes use of the Collection concept to build, handle and maintain.
+- Great for taking your skills to the next level.
+- It has the ability, once installed in a folder, to produce a personalized installable ISO version of NuTyX by itself.
+- No need for a separate HDD or partition. The NuTyX installer creates a virtual environment to any target. 
+**Available DEs**
+- GNOME 
+- MATE 
+- LXDE 
+- KDE5 
+- XFCE
+- Everything else buildable. 
+**More info**
+http://www.nutyx.org/en/
+http://webchat.freenode.net/?channels=nutyx
+https://twitter.com/nutyx_linux
