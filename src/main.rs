@@ -237,7 +237,7 @@ command!(info(_context, msg, args) {
 			let xx = com::replace("distros", &welp, "");
 			let yy = com::replace("/", &xx, "");
 			let zz = com::replace(".txt", &yy, "");
-			if !zz.to_string().contains(".png") {
+			if !zz.to_string().contains("_") {
 				
 				list = format!("{}\n{},",&mut list, zz);
 			}
@@ -257,31 +257,33 @@ command!(info(_context, msg, args) {
 			let yy = com::replace("/", &xx, "");
 			let zz = com::replace(".txt", &yy, "");
 			if distro.eq_ignore_ascii_case(&zz) {
-				let mut fulltext = "".to_string();
-				let text = com::read_to_string(&format!("distros/{}.txt",&zz));
-				for line in text.to_string().lines() {
-					if line.contains(".png") {
-						image = line.to_string();
+				if !zz.to_string().contains("_") {
+					let mut fulltext = "".to_string();
+					let text = com::read_to_string(&format!("distros/{}.txt",&zz));
+					for line in text.to_string().lines() {
+						if line.contains(".png") {
+							image = line.to_string();
+						}
+						else if line.contains("http") {
+							adress = line.to_string();
+							fulltext = format!("{}\n{}",fulltext, line.to_string());
+						}
+						else if line.contains("#") {
+							colour = Colour::new(com::replace("#", &line, "").parse::<u32>().unwrap());
+						}
+						else {
+							fulltext = format!("{}\n{}",fulltext, line.to_string());
+						}
 					}
-					else if line.contains("http") {
-						adress = line.to_string();
-						fulltext = format!("{}\n{}",fulltext, line.to_string());
-					}
-					else if line.contains("#") {
-						colour = Colour::new(com::replace("#", &line, "").parse::<u32>().unwrap());
-					}
-					else {
-						fulltext = format!("{}\n{}",fulltext, line.to_string());
-					}
+					let _ = msg.channel_id.send_message(|m| m
+						.embed(|e| e
+						.title(&zz)
+						.color(colour)
+						.thumbnail(&image)
+						.description(&fulltext)
+						.url(&adress)
+					));
 				}
-				let _ = msg.channel_id.send_message(|m| m
-					.embed(|e| e
-					.title(&zz)
-					.color(colour)
-					.thumbnail(&image)
-					.description(&fulltext)
-					.url(&adress)
-				));
 			}
 		}
 	}
