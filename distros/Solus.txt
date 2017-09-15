@@ -1,0 +1,22 @@
+https://solus-project.com/imgs/solus.png
+#5412066
+**Solus** is an operating system that is designed for home computing. Built from scratch, every part optimized imparts a cohesive computing experience. Relatively new, but catching up to higher ground.
+
+**Solus Editions (DEs)**
+Solus has 3 default spins as of 2017:
+**Solus Budgie** home to the fresh desktop environment, this GNOME 3 part-flavor offers a familiar yet supercharged desktop to fit right at home with past Windows users.
+**Solus GNOME** for the classic DE, a contemporary desktop experience. Those looking for a modern and customizable (with easy extentions) desktop, look no further!
+**Solus MATE** for a traditional desktop made for newbie or advanced users alike, and most suitable for older hardware.
+
+**Notable features**
+-eopkg, easily install and build anything, likewise to it's furbished Software Center.
+-Rolling Distro, stay near the bleeding edge.
+-Ships with a variety of software out of the box.
+-Enhanced Hibernation keeping on laptops, battery saver to be included.
+-Jump start with shorter boot times.
+
+**More info**
+https://solus-project.com/home/
+https://www.reddit.com/r/SolusProject/
+https://twitter.com/SolusProject
+
