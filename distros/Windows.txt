@@ -1,6 +1,6 @@
 https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Windows_logo_-_2012.svg/480px-Windows_logo_-_2012.svg.png
 #3316724
-**Microsoft Windows** is a MS-DOS based OS. It is the single most popular Operatingsystem to date, but has virus and privacy issues.
+**Microsoft Windows** is a nt-kernel based OS. It is the single most popular Operatingsystem to date, but is plauged with malware and buildt in spying features. 
 **Notable features**
 - Microsoft Cortana, your own personal voice assistant, free of charge!
 - DirectX, a way to render 3d applications, Windows only.
@@ -13,7 +13,7 @@ https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Windows_logo_-_2012.sv
 - A big target for viruses
 - Closed source
 - Paid
-- Forced updates
+- Forced updates (can be turned off)
 **More info**
 https://www.microsoft.com/en-us/windows
 https://en.wikipedia.org/wiki/Microsoft_Windows
