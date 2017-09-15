@@ -1,11 +1,13 @@
 https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/480px-Archlinux-icon-crystal-64.svg.png
 #1545169
-**Arch Linux** is an independently developed, x86-64 general-purpose GNU/Linux distribution that strives to provide the latest stable versions of most software by following a rolling-release model. The default installation is a minimal base system, configured by the user to only add what is purposely required.
+**Arch Linux** is a rolling-release, minimal style system, where the user configures the system to their need.
 **Notable features**
-- Simplicity, Arch linux comes without unnecessary additions or modifications, and the user adds exactly what he or she may need.
-- Modernity, this distribution maintains and releases the latest versions of the software.
-- KISS, keep it simple stupid, nothing is overcomplicated and everything should be easy to understand or read up on.
-- Arch wiki, probably the most useful tool arch brings to the table. As a vast, easy to use wiki where anything you possibly can wonder about is written down with examples and troubleshooting steps.
+- Simplicity, install what you need, no extra bloat.
+- Bleeding Edge, the latest and greatest packages, right at your fingertips.
+- Keep it simple stupid, no need to overcompicate things.
+- Pacman, package manager with most packages.
+- AUR, no need to look for packages on shady websites.
+- Arch wiki, a vast, easy to use wiki with examples and troubleshooting steps.
 **More info**
 https://archlinux.org/
 https://reddit.com/r/archlinux
