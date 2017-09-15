@@ -10,6 +10,7 @@ use serenity::client::CACHE;
 use serenity::model::*;
 use serenity::Result as SerenityResult;
 use serenity::Client;
+use serenity::ext::framework::help_commands;
 use std::env;
 use std::fs::File;
 use std::path::Path;
@@ -20,7 +21,6 @@ use ddg::Query;
 use serenity::utils::Colour;
 use serenity::utils::builder::CreateEmbedFooter;
 use rand::distributions::{IndependentSample, Range};
-use std::time::{SystemTime, UNIX_EPOCH};
 use std::fs;
 
 mod ddginc;
@@ -28,65 +28,79 @@ mod admin;
 mod coop;
 mod com;
 
-static mut USERS_TIMEOUT: u64 = 5;
-
 fn main() {
 	let token = env::var("DISCORD_TOKEN")
 		.expect("Expected a token in the environment");
 	let mut client = Client::new(&token);
 	
 	client.with_framework(|f| f
+		.bucket("basic", 5, 60, 3)
 		.configure(|c| c
 			.prefix("!")
 			.on_mention(true))
 		.group("Miscellaneous", |g| g
 			.command("gnu", |c| c
+				.desc("GNU Interjection copypasta")
+				.use_quotes(true)
 				.exec(gnu))
-			.command("lcp help", |c| c
-				.exec(lcphelp))
 			.command("whiteface", |c| c
+				.desc("This is not the gif on the internet")
 				.exec(whiteface))
 			.command("godtellmeyourways", |c| c
+				.desc("Quote God himself, Richard Matthew Stallman")
 				.exec(god))
 			.command("donkey", |c| c
+				.desc("Show current bot time and set nickname and playing message")
 				.exec(donkey)))
 		.group("Useful shit", |g| g
 			.command("ddg", |c| c
+				.desc("Powerful search with embeds")
+				.usage("<search terms>")
 				.exec(ddg))
 			.command("emoji", |c| c
+				.desc(":regional_indicator_s::regional_indicator_p::regional_indicator_e::regional_indicator_a::regional_indicator_k:   :regional_indicator_i::regional_indicator_n:   :regional_indicator_e::regional_indicator_m::regional_indicator_o::regional_indicator_j::regional_indicator_i:")
+				.usage("<your text>")
+				.bucket("basic")
 				.exec(emoji))
 			.command("info", |c| c
+				.desc("Distro database")
+				.usage("<distro name>")
 				.exec(info)))
-		.group("Shill", |g| g
+		.group("About bot", |g| g
 			.command("github", |c| c
+				.desc("Shilling open source nature of this project")
 				.exec(github))
-			.command("gnome", |c| c
-				.exec(gnome))
-			.command("tumbleweed", |c| c
-				.exec(tw))
 			.command("rust", |c| c
-				.exec(rust)))
+				.desc("Shilling rust nature of this project")
+				.exec(rust))
+			.command("lcpae", |c| c
+			.exec_help(help_commands::with_embeds)))
 		.group("Tux", |g| g
 			.command("roasted", |c| c
+				.desc("Daaaaaamn!")
 				.exec(roasted))
 			.command("hypertux", |c| c
+				.desc("Laugh all you want")
 				.exec(hypertux))
 			.command("hyperthink", |c| c
-				.exec(hyperthink))
-			.command("rust", |c| c
-				.exec(rust)))
+				.desc("TFW hacked mainframe")
+				.exec(hyperthink)))
 		.group("Coop", |g| g
+			.prefix("coop")
 			.command("coop", |c| c
+				.desc("Actually don't use it in this state")
+				.guild_only(true)
+				.usage("<distro name>")
+				.owners_only(true)
 				.exec(coop))));
 
 	let _ = client.start().map_err(|why| println!("Client ended: {:?}", why));
 }
 
 
-command!(coop(_ctx, msg) {
-	let mut split = msg.content.split(' ');
-	let argument = split.nth(1).unwrap_or("");
-	let game = split.next().unwrap_or("");
+command!(coop(_ctx, msg, args) {
+	let argument = &args[0];
+	let game = &args[1];
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,
 		None => {
@@ -209,38 +223,30 @@ command!(rust(_context, msg) {
 	check_msg(msg.channel_id.say(&com::read_to_string("rust.txt")));
 });
 
-command!(tw(_context, msg) {
-	check_msg(msg.channel_id.say(&com::read_to_string("tumbleweed.txt")));
-});
-
-command!(gnome(_context, msg) {
-	check_msg(msg.channel_id.say(&com::read_to_string("gnome.txt")));
-});
-
 command!(lcphelp(_context, msg) {
 	check_msg(msg.channel_id.say(&com::read_to_string("help.txt")));
 });
 
 command!(roasted(_context, msg) {
-	let paths = vec!["roasted.png"];
+	let paths = vec!["images/roasted.png"];
 	let _ = msg.channel_id.send_files(paths, |m| m.content(""));
 
 });
 
 command!(hypertux(_context, msg) {
-	let paths = vec!["hypertux.png"];
+	let paths = vec!["images/hypertux.png"];
 	let _ = msg.channel_id.send_files(paths, |m| m.content(""));
 
 });
 
 command!(hyperthink(_context, msg) {
-	let paths = vec!["hyperthink.png"];
+	let paths = vec!["images/hyperthink.png"];
 	let _ = msg.channel_id.send_files(paths, |m| m.content(""));
 
 });
 
 command!(gnu(_context, msg, args) {
-	let paths = vec!["interjection.png"];
+	let paths = vec!["images/interjection.png"];
 	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&com::gnu_replacement(args.to_vec()))));
 
 });
@@ -371,10 +377,6 @@ command!(emoji(_context, msg, args) {
 		hello = format!("{}   ",hello);
 		world = format!("{}   ",world);
 	}
-	let start = SystemTime::now();
-	let since_the_epoch = start.duration_since(UNIX_EPOCH)
-		.expect("Time went backwards");
-	if unsafe{USERS_TIMEOUT} <= since_the_epoch.as_secs() {
 	if hello.len() < 2000 {
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
@@ -382,8 +384,6 @@ command!(emoji(_context, msg, args) {
 			.colour(Colour::from_rgb(0, 80, 80))
 			.description(&format!("{}\n{}",hello,world))
 		));
-		unsafe{USERS_TIMEOUT = since_the_epoch.as_secs() + 60};
-	}
 	}
 });
 
