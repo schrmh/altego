@@ -1,5 +1,5 @@
 https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Gnomelogo-footprint.svg/1024px-Gnomelogo-footprint.svg.png
-#0
+#65793
 **Gnome 3** is desktop environment focused on ease of use and ease of customization. It's easy choice for newcomers and advanced users alike.
 **Notable features**
 - Extensions
