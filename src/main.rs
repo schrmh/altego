@@ -48,6 +48,7 @@ fn main() {
 		.on("emoji", emoji)
 		.on("tumbleweed", tw)
 		.on("gnome", gnome)
+		.on("github", github)
 		.on("roasted", roasted)
 		.on("hypertux", hypertux)
 		.on("hyperthink", hyperthink)
@@ -180,15 +181,22 @@ command!(coop(_ctx, msg) {
 	}
 });
 
+command!(github(_context, msg) {
+	check_msg(msg.channel_id.say("I mean, Github something or other is like here or something:\nhttps://github.com/LelCP/altego"));
+});
+
 command!(rust(_context, msg) {
 	check_msg(msg.channel_id.say(&com::read_to_string("rust.txt")));
 });
+
 command!(tw(_context, msg) {
 	check_msg(msg.channel_id.say(&com::read_to_string("tumbleweed.txt")));
 });
+
 command!(gnome(_context, msg) {
 	check_msg(msg.channel_id.say(&com::read_to_string("gnome.txt")));
 });
+
 command!(lcphelp(_context, msg) {
 	check_msg(msg.channel_id.say(&com::read_to_string("help.txt")));
 });
