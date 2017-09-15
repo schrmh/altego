@@ -1,5 +1,5 @@
 http://www.nutyx.org/graphics/logo_nutyx_120.png
-#11759669
+#7340032
 **NuTyX** is a French Linux distribution (with multi-language support) built from parts of Linux From Scratch and Beyond Linux From Scratch. The OS uses a 'Cards' system to maintain a meticulous package system made to build and test binary and source packages or groups. This is an advanced GNU/Linux system.
 **Notable features**
 - Makes use of the Collection concept to build, handle and maintain.
