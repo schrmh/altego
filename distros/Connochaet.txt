@@ -1,0 +1,12 @@
+https://connochaetos.org/wiki/bl-themes/future-imperfect/img/logo.png
+#14417920
+**ConnochaetOS** (formerly DeLi Linux) is fully free/libre GNU/Linux distro for x86 computers with limited resources, based on Slackware and Salix OS. “Fully free” is the emphasis of this distribution.
+**Notable features**
+- Follows the KISS principle.
+- Contains no proprietary, non-free software, blobs or firmware.
+- Easy to jumpstart with the 'slack-n-free' repo.
+**Available DEs**
+- OpenBox
+- Anything Compilable
+**More info**
+https://connochaetos.org/wiki/
