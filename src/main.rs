@@ -11,6 +11,7 @@ use serenity::model::*;
 use serenity::Result as SerenityResult;
 use serenity::Client;
 use serenity::ext::framework::help_commands;
+
 use std::env;
 use std::fs::File;
 use std::path::Path;
@@ -99,7 +100,7 @@ fn main() {
 			.command("list", |c| c
 				.desc("TFW hacked mainframe")
 				.exec(list)))); //I don't exactly know why reading server id doesn't work, TODO
-
+	client.on_ready(|ctx, _| {ctx.set_game_name("lelcp.github.io");});
 	let _ = client.start().map_err(|why| println!("Client ended: {:?}", why));
 }
 
@@ -467,8 +468,8 @@ command!(god(_ctx, msg) {
 			.url("https://stallman.org/")
 			));
 });
-command!(donkey(ctx, msg) {
-	
+command!(donkey(_ctx, msg) {
+	let user_id = CACHE.read().unwrap().user.id;
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,
 		None => {
@@ -476,12 +477,9 @@ command!(donkey(ctx, msg) {
 			return Ok(());
 		},
 	};
-	let user_id = CACHE.read().unwrap().user.id;
-	ctx.set_game_name("lelcp.github.io");
-	
 	let now = Local::now();
 	let dt=format!("{}", now.format("Kong! %Y-%m-%d %H:%M:%S").to_string());
-	check_msg(msg.channel_id.say(&&format!("{}, <@!{}>", dt,user_id )));
+	check_msg(msg.channel_id.say(&format!("{}, <@!{}>", dt,user_id )));
 	match guild_id.edit_nickname(Some("ԀƆ˥")) {
 		Ok(val)  => val,
 		Err(err) => return Err(err.to_string()),
