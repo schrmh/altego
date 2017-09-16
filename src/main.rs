@@ -41,6 +41,7 @@ fn main() {
 		.group("Miscellaneous", |g| g
 			.command("gnu", |c| c
 				.desc("GNU Interjection copypasta")
+				.usage("<GNU replacement> <Linux replacement>")
 				.use_quotes(true)
 				.exec(gnu))
 			.command("whiteface", |c| c

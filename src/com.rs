@@ -22,20 +22,30 @@ pub fn read_to_string(filename: &str) -> String {
 }
 
 pub fn gnu_replacement(content: Vec<String>) -> String {
-	let first = &content[0];
-	let second = &content[1];
+	let mut first: &str;
+	let mut second: &str;
+	if &content.len()==&1 {
+		first = &content[0];
+		second = "";
+	}
+	else if &content.len()==&2 {
+		first = &content[1];
+		second = &content[0];
+	}
+	else {
+		first = "";
+		second = "";
+	}
 	let mut gnu = File::open("gnu.txt").expect("opening file");
 	let mut gnutext = String::new();
 	gnu.read_to_string(&mut gnutext).expect("reading file");
-	let mut first_preserved = first.clone().to_string();
-	let mut second_preserved = second.clone().to_string();
 	if second == "" {
-		second_preserved = "GNU".to_string();
+		second = "GNU";
 	}
 	if first == "" {
-		first_preserved = "Linux".to_string();
+		first = "Linux";
 	}
-	let replacing_gnu = replace("GNU", &gnutext, &second_preserved);
-	let replacing_linux = replace("Linux", &replacing_gnu, &first_preserved);
+	let replacing_gnu = replace("GNU", &gnutext, &second);
+	let replacing_linux = replace("Linux", &replacing_gnu, &first);
 	return replace("`", &replacing_linux, "");
 }
