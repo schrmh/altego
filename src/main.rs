@@ -264,14 +264,10 @@ command!(wget(_context, msg, args) {
 		}
 	}
 	else if args.len() == 1 {
-<<<<<<< HEAD
 		let countdown: u64 = match args[0].parse() {
 			Ok(val)  => val,
 			Err(_err) => 10,
 		};
-=======
-		let countdown: u64 = args[0].parse().unwrap();
->>>>>>> 4af507b5595ff4d991f70475a7faa77234dc5ade
 		while !finished {
 			for vec in msg.channel_id.messages(|g| g.after(msg_id).limit(100)) {
 				for message in vec {
@@ -339,7 +335,7 @@ command!(info(_context, msg, args) {
 		let mut image = "".to_string();
 		let mut colour = Colour::new(0);
 		let mut distro = &args[0];
-		let mut list = format!("**You can learn about:**");
+		let mut list = format!("");
 		for entry in glob("distros/*.txt").unwrap() {
 		match entry {
 			Ok(path) => {
