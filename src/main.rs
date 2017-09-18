@@ -264,10 +264,14 @@ command!(wget(_context, msg, args) {
 		}
 	}
 	else if args.len() == 1 {
+<<<<<<< HEAD
 		let countdown: u64 = match args[0].parse() {
 			Ok(val)  => val,
 			Err(_err) => 10,
 		};
+=======
+		let countdown: u64 = args[0].parse().unwrap();
+>>>>>>> 4af507b5595ff4d991f70475a7faa77234dc5ade
 		while !finished {
 			for vec in msg.channel_id.messages(|g| g.after(msg_id).limit(100)) {
 				for message in vec {
