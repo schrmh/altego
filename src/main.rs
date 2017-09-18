@@ -69,9 +69,9 @@ fn main() {
 				.desc("Distro database")
 				.usage("<distro name>")
 				.exec(info))
-			.command("botwinderstfu", |c| c
+			.command("wget", |c| c
 				.desc("Sends wget script")
-				.usage("<number of messages backwards to get (default is 1000)>")
+				.usage("<amount of messages in hundreds to download from channel>")
 				.exec(wget)))
 		.group("About bot", |g| g
 			.command("github", |c| c
@@ -233,33 +233,28 @@ command!(wget(_context, msg, args) {
 	let mut verylongwgetlist = "".to_string();
 	let mut msg_id = msg.id;
 	let mut counter=0;
-	let mut done = false;
 	let mut finished = false;
 	if args.len() == 0 {
 		while !finished {
-				for vec in msg.channel_id.messages(|g| g.before(msg_id).limit(100)) {
-					for message in vec {
-						for attachment in message.attachments {
-							if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
-								verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
-							}
+			for vec in msg.channel_id.messages(|g| g.before(msg_id).limit(100)) {
+				for message in vec {
+					for attachment in message.attachments {
+						if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
+							verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
 						}
-						let mut split = message.content.split(' ');
-						for link in split {
-							if link.contains("http") {
-								if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
-									verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
-								}
-							}
-						}
-
-						msg_id = message.id;
 					}
-			
+					let mut split = message.content.split(' ');
+					for link in split {
+						if link.contains("http") {
+							if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
+								verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
+							}
+						}
+					}
+					msg_id = message.id;
 				}
-			
-
-			if counter >=100 {
+			}
+			if counter >=10 {
 				counter=0;
 				finished = true;
 			}
@@ -268,22 +263,30 @@ command!(wget(_context, msg, args) {
 	}
 	else if args.len() == 1 {
 		let countdown: u64 = args[0].parse().unwrap();
-		for vec in msg.channel_id.messages(|g| g.after(msg_id).limit(countdown)) {
-			for message in vec {
-				for attachment in message.attachments {
-					if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
-						verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
-					}
-				}
-				let mut split = message.content.split(' ');
-				for link in split {
-					if link.contains("http") {
-						if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
-							verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
+		while !finished {
+			for vec in msg.channel_id.messages(|g| g.after(msg_id).limit(100)) {
+				for message in vec {
+					for attachment in message.attachments {
+						if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
+							verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
 						}
 					}
+					let mut split = message.content.split(' ');
+					for link in split {
+						if link.contains("http") {
+							if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
+								verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
+							}
+						}
+					}
+					msg_id = message.id;
 				}
 			}
+			if counter >= countdown {
+				counter=0;
+				finished = true;
+			}
+			counter += 1;	
 		}
 	}
 	if verylongwgetlist != "" {
@@ -299,6 +302,7 @@ command!(wget(_context, msg, args) {
 		}
 	let path = vec!["wget_list"];
 	let _ = msg.channel_id.send_files(path, |m| m.content("Use it as `wget --input-file=wget-list` in directory in which you want files to save files\n\nHave fun :D"));
+	fs::remove_file("wget_list").unwrap();
 	}
 });
 
