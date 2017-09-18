@@ -27,6 +27,7 @@ use serenity::utils::builder::CreateEmbedFooter;
 use rand::distributions::{IndependentSample, Range};
 use std::fs;
 use glob::glob;
+use std::path::PathBuf;
 
 mod ddginc;
 mod coop;
@@ -196,11 +197,8 @@ command!(github(_context, msg) {
 });
 
 command!(rust(_context, msg) {
-	check_msg(msg.channel_id.say(&com::read_to_string("rust.txt")));
-});
-
-command!(lcphelp(_context, msg) {
-	check_msg(msg.channel_id.say(&com::read_to_string("help.txt")));
+	let path = PathBuf::from("rust.txt");
+	check_msg(msg.channel_id.say(&com::read_to_string(&path)));
 });
 
 command!(roasted(_context, msg) {
@@ -314,20 +312,32 @@ command!(wget(_context, msg, args) {
 command!(info(_context, msg, args) {
 	if args.len() == 0 {
 		let mut list = format!("**You can learn about:**");
-		for entry in glob("distros/*.txt").unwrap() {
+		let mut distro = "**Distros:**".to_string();
+		let mut de = "**DEs & WMs**".to_string();
+		let mut other = "**Others**".to_string();
+		for entry in glob("info/**/*.txt").unwrap() {
 		match entry {
 			Ok(path) => {
 				let welp = path.display().to_string().clone();
-				let xx = com::replace("distros", &welp, "");
-				let yy = com::replace("/", &xx, "");
-				let zz = com::replace(".txt", &yy, "");
-				if !zz.to_string().contains("_") {
-					list = format!("{}\n{}",&mut list, zz);
+				let mut split = welp.split('/');
+				let directory = split.nth(1).unwrap_or_default();
+				let noextension = com::replace(".txt", &split.next().unwrap_or_default(), "");
+				if !noextension.to_string().contains("_") {
+					if directory == "Distros" {
+						distro = format!("{}\n{}", &distro, &noextension);
+					}
+					else if directory == "DEs&WMs" {
+						de = format!("{}\n{}", &de, &noextension);
+					}
+					else if directory == "Others" {
+						other = format!("{}\n{}", &other, &noextension);
+					}
 				}
 			},
 			Err(e) => println!("{:?}", e),
 			}
 		}
+	list = format!("{}\n{}\n{}\n{}",&mut list, distro, de, other);
 	check_msg(msg.channel_id.say(&list));
 	}
 	else {
@@ -335,18 +345,16 @@ command!(info(_context, msg, args) {
 		let mut image = "".to_string();
 		let mut colour = Colour::new(0);
 		let mut distro = &args[0];
-		let mut list = format!("");
-		for entry in glob("distros/*.txt").unwrap() {
+		for entry in glob("info/**/*.txt").unwrap() {
 		match entry {
 			Ok(path) => {
 				let welp = path.display().to_string().clone();
-				let xx = com::replace("distros", &welp, "");
-				let yy = com::replace("/", &xx, "");
-				let zz = com::replace(".txt", &yy, "");
-				if distro.eq_ignore_ascii_case(&zz) {
-					if !zz.to_string().contains("_") {
+				let mut split = welp.split('/');
+				let noextension = com::replace(".txt", &split.nth(2).unwrap_or_default(), "");
+				if distro.eq_ignore_ascii_case(&noextension) {
+					if !noextension.to_string().contains("_") {
 						let mut fulltext = "".to_string();
-						let text = com::read_to_string(&format!("distros/{}.txt",&zz));
+						let text = com::read_to_string(&path);
 						for line in text.to_string().lines() {
 							if line.contains(".png") {
 								image = line.to_string();
@@ -364,7 +372,7 @@ command!(info(_context, msg, args) {
 						}
 						let _ = msg.channel_id.send_message(|m| m
 							.embed(|e| e
-							.title(&zz)
+							.title(&noextension)
 							.color(colour)
 							.thumbnail(&image)
 							.description(&fulltext)
@@ -376,7 +384,6 @@ command!(info(_context, msg, args) {
 			Err(e) => println!("{:?}", e),
 			}
 		}
-	check_msg(msg.channel_id.say(&list));
 	}
 });
 

@@ -5,6 +5,7 @@ use std::fs::File;
 use std::io::Read;
 use self::regex::Regex;
 use std::ascii::AsciiExt;
+use std::path::PathBuf;
 
 pub fn replace(replaced: &str, replacement: &str,replacing: &str) -> String {
 	let re = match Regex::new(replaced) {
@@ -14,7 +15,7 @@ pub fn replace(replaced: &str, replacement: &str,replacing: &str) -> String {
 	return re.replace_all(replacement, replacing).to_string();
 }
 
-pub fn read_to_string(filename: &str) -> String {
+pub fn read_to_string(filename: &PathBuf) -> String {
 	let mut rust = File::open(filename).expect("opening file");
 	let mut rustext = String::new();
 	rust.read_to_string(&mut rustext).expect("reading file");
