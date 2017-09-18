@@ -4,6 +4,7 @@ extern crate chrono;
 extern crate ddg;
 extern crate rand;
 extern crate time;
+extern crate glob;
 
 use std::string::*;
 use serenity::client::CACHE;
@@ -25,6 +26,7 @@ use serenity::utils::Colour;
 use serenity::utils::builder::CreateEmbedFooter;
 use rand::distributions::{IndependentSample, Range};
 use std::fs;
+use glob::glob;
 
 mod ddginc;
 mod coop;
@@ -311,18 +313,20 @@ command!(wget(_context, msg, args) {
 
 command!(info(_context, msg, args) {
 	if args.len() == 0 {
-		let paths = fs::read_dir("distros").unwrap();
 		let mut list = format!("**You can learn about:**");
-		for path in paths {
-			let welp = path.unwrap().path().display().to_string().clone();
-			let xx = com::replace("distros", &welp, "");
-			let yy = com::replace("/", &xx, "");
-			let zz = com::replace(".txt", &yy, "");
-			if !zz.to_string().contains("_") {
-				
-				list = format!("{}\n{}",&mut list, zz);
+		for entry in glob("distros/*.txt").unwrap() {
+		match entry {
+			Ok(path) => {
+				let welp = path.display().to_string().clone();
+				let xx = com::replace("distros", &welp, "");
+				let yy = com::replace("/", &xx, "");
+				let zz = com::replace(".txt", &yy, "");
+				if !zz.to_string().contains("_") {
+					list = format!("{}\n{}",&mut list, zz);
+				}
+			},
+			Err(e) => println!("{:?}", e),
 			}
-
 		}
 	check_msg(msg.channel_id.say(&list));
 	}
@@ -331,42 +335,48 @@ command!(info(_context, msg, args) {
 		let mut image = "".to_string();
 		let mut colour = Colour::new(0);
 		let mut distro = &args[0];
-		let paths = fs::read_dir("distros").unwrap();
-		for path in paths {
-			let welp = path.unwrap().path().display().to_string().clone();
-			let xx = com::replace("distros", &welp, "");
-			let yy = com::replace("/", &xx, "");
-			let zz = com::replace(".txt", &yy, "");
-			if distro.eq_ignore_ascii_case(&zz) {
-				if !zz.to_string().contains("_") {
-					let mut fulltext = "".to_string();
-					let text = com::read_to_string(&format!("distros/{}.txt",&zz));
-					for line in text.to_string().lines() {
-						if line.contains(".png") {
-							image = line.to_string();
+		let mut list = format!("**You can learn about:**");
+		for entry in glob("distros/*.txt").unwrap() {
+		match entry {
+			Ok(path) => {
+				let welp = path.display().to_string().clone();
+				let xx = com::replace("distros", &welp, "");
+				let yy = com::replace("/", &xx, "");
+				let zz = com::replace(".txt", &yy, "");
+				if distro.eq_ignore_ascii_case(&zz) {
+					if !zz.to_string().contains("_") {
+						let mut fulltext = "".to_string();
+						let text = com::read_to_string(&format!("distros/{}.txt",&zz));
+						for line in text.to_string().lines() {
+							if line.contains(".png") {
+								image = line.to_string();
+							}
+							else if line.contains("http") && adress == "" {
+								adress = line.to_string();
+								fulltext = format!("{}\n{}",fulltext, line.to_string());
+							}
+							else if line.contains("#") {
+								colour = Colour::new(com::replace("#", &line, "").parse::<u32>().unwrap());
+							}
+							else {
+								fulltext = format!("{}\n{}",fulltext, line.to_string());
+							}
 						}
-						else if line.contains("http") && adress == "" {
-							adress = line.to_string();
-							fulltext = format!("{}\n{}",fulltext, line.to_string());
-						}
-						else if line.contains("#") {
-							colour = Colour::new(com::replace("#", &line, "").parse::<u32>().unwrap());
-						}
-						else {
-							fulltext = format!("{}\n{}",fulltext, line.to_string());
-						}
+						let _ = msg.channel_id.send_message(|m| m
+							.embed(|e| e
+							.title(&zz)
+							.color(colour)
+							.thumbnail(&image)
+							.description(&fulltext)
+							.url(&adress)
+						));
 					}
-					let _ = msg.channel_id.send_message(|m| m
-						.embed(|e| e
-						.title(&zz)
-						.color(colour)
-						.thumbnail(&image)
-						.description(&fulltext)
-						.url(&adress)
-					));
 				}
+			},
+			Err(e) => println!("{:?}", e),
 			}
 		}
+	check_msg(msg.channel_id.say(&list));
 	}
 });
 

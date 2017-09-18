@@ -16,6 +16,7 @@ url = "1.5.1"
 rand = "0.3.16"
 time = "0.1.38"
 tokio-core = "0.1.9"
+glob = "0.2.11"
 
 [dependencies.serenity]
 version = "0.3.0"
