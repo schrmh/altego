@@ -11,9 +11,11 @@ use serenity::model::*;
 use serenity::Result as SerenityResult;
 use serenity::Client;
 use serenity::ext::framework::help_commands;
-
+use std::fs::OpenOptions;
+use std::io::prelude::*;
 use std::env;
 use std::fs::File;
+use std::io::BufWriter;
 use std::path::Path;
 use std::ascii::AsciiExt;
 use chrono::*;
@@ -66,7 +68,11 @@ fn main() {
 			.command("info", |c| c
 				.desc("Distro database")
 				.usage("<distro name>")
-				.exec(info)))
+				.exec(info))
+			.command("botwinderstfu", |c| c
+				.desc("Sends wget script")
+				.usage("<number of messages backwards to get (default is 1000)>")
+				.exec(wget)))
 		.group("About bot", |g| g
 			.command("github", |c| c
 				.desc("Shilling open source nature of this project")
@@ -220,6 +226,80 @@ command!(gnu(_context, msg, args) {
 });
 command!(whiteface(_context, msg) {
 	check_msg(msg.channel_id.say(&"https://i.redd.it/fhrd8f2gpxjz.gif"));
+});
+
+
+command!(wget(_context, msg, args) {
+	let mut verylongwgetlist = "".to_string();
+	let mut msg_id = msg.id;
+	let mut counter=0;
+	let mut done = false;
+	let mut finished = false;
+	if args.len() == 0 {
+		while !finished {
+				for vec in msg.channel_id.messages(|g| g.before(msg_id).limit(100)) {
+					for message in vec {
+						for attachment in message.attachments {
+							if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
+								verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
+							}
+						}
+						let mut split = message.content.split(' ');
+						for link in split {
+							if link.contains("http") {
+								if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
+									verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
+								}
+							}
+						}
+
+						msg_id = message.id;
+					}
+			
+				}
+			
+
+			if counter >=100 {
+				counter=0;
+				finished = true;
+			}
+			counter += 1;	
+		}
+	}
+	else if args.len() == 1 {
+		let countdown: u64 = args[0].parse().unwrap();
+		for vec in msg.channel_id.messages(|g| g.after(msg_id).limit(countdown)) {
+			for message in vec {
+				for attachment in message.attachments {
+					if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
+						verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
+					}
+				}
+				let mut split = message.content.split(' ');
+				for link in split {
+					if link.contains("http") {
+						if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
+							verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
+						}
+					}
+				}
+			}
+		}
+	}
+	if verylongwgetlist != "" {
+		File::create("wget_list").unwrap();
+		if Path::new("wget_list").exists() == true {
+			let writes = OpenOptions::new()
+				.write(true)
+				.open("wget_list")
+				.unwrap();
+			writes.set_len(0).unwrap();
+			let mut writer = BufWriter::new(&writes);
+				writer.write_all(verylongwgetlist.as_bytes()).unwrap();;
+		}
+	let path = vec!["wget_list"];
+	let _ = msg.channel_id.send_files(path, |m| m.content("Use it as `wget --input-file=wget-list` in directory in which you want files to save files\n\nHave fun :D"));
+	}
 });
 
 command!(info(_context, msg, args) {
