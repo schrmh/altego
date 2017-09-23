@@ -1,0 +1,12 @@
+https://www.voidlinux.eu/assets/img/void_bg.png
+#11256491
+**Void** is an independently-developed, general-purpose operating system based on the monolithic Linux kernel. It features a hybrid binary/source package management system which allows users to quickly install, update and remove software, or to build software directly from sources with the help of the XBPS source packages collection. 
+**Notable features**
+- Can run on single-board computers (armv6 - armv7).
+- Rolling-release development model with daily updates.
+- Native init system "runit".
+- Uses OpenBSD's LibreSSL software. 
+**Available DEs**
+- Most imaginable, buildable.
+**More info**
+http://www.voidlinux.eu/
