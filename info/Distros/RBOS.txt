@@ -1,0 +1,18 @@
+https://voatpic.me/image/3CB2B0AB43.png
+#16777215
+**RebeccaBlackOS (RBOS)** is a Debian-based live distribution which can be used to run Wayland desktop sessions. The distribution was (and remains) one of the only Linux distributions to run a Wayland session from live media.
+**Notable features**
+- Quickly run and test Wayland with expansive feature sets.
+- Insantiate your love for Rebecca Black.
+- Native Calligra Wayland Programs.
+- Weston, Orbital, Liri, GNOME-Shell, you name it, its got it.
+- Uses Sway, the successor to Hawaii.
+- Test-strap yourself with **GTK4.**
+**Available DEs**
+- GNOME
+- KDE / Plasma
+- Enlightenment E21
+- LXQt
+- Pantheon
+**More info**
+https://sourceforge.net/projects/rebeccablackos/
