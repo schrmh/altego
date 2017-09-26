@@ -37,7 +37,7 @@ pub fn gnu_replacement(content: Vec<String>) -> String {
 		first = "";
 		second = "";
 	}
-	let mut gnu = File::open("gnu.txt").expect("opening file");
+	let mut gnu = File::open("pastas/gnu.txt").expect("opening file");
 	let mut gnutext = String::new();
 	gnu.read_to_string(&mut gnutext).expect("reading file");
 	if second == "" {

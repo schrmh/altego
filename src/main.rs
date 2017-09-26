@@ -5,13 +5,16 @@ extern crate ddg;
 extern crate rand;
 extern crate time;
 extern crate glob;
+extern crate rusqlite;
 
 use std::string::*;
 use serenity::client::CACHE;
 use serenity::model::*;
 use serenity::Result as SerenityResult;
 use serenity::Client;
-use serenity::ext::framework::help_commands;
+use serenity::framework::standard::help_commands;
+use serenity::framework::StandardFramework;
+use serenity::client::{EventHandler,Context};
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::env;
@@ -28,17 +31,58 @@ use rand::distributions::{IndependentSample, Range};
 use std::fs;
 use glob::glob;
 use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 mod ddginc;
-mod coop;
 mod com;
+mod db;
+
+struct Handler;
+
+impl EventHandler for Handler {
+    fn on_ready(&self, ctx: Context, ready: Ready) {
+        	println!("{} is connected!", ready.user.name);
+		ctx.set_game_name("lelcp.github.io/bot");
+	}
+	fn on_message(&self, _: Context, message: Message) {
+            if message.content.to_ascii_lowercase().contains("thanks") {
+			let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
+				Some(channel) => channel.read().unwrap().guild_id,
+				None => {
+					check_msg(message.channel_id.say(&"Groups and DMs not supported"));
+					return ();
+				},
+			};
+			let start = SystemTime::now();
+    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
+       			.expect("Time went backwards");
+			if since_the_epoch.as_secs() >= db::time_pierogi(&message.author.id.to_string(),&guild_id.to_string()) {
+				let mut msg: String = "".to_string();
+				for mention in message.mentions {
+					if message.author.id != mention.id {
+						msg = format!("{} <@{}>",msg,mention.id);
+						let pierogi = db::read_pierogi(&mention.id.to_string(),&guild_id.to_string());
+						db::new_pierogi(&mention.id.to_string(), &guild_id.to_string(), pierogi + 1, db::time_pierogi(&mention.id.to_string(),&guild_id.to_string()));
+						db::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), db::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()), since_the_epoch.as_secs() + 28740);
+					}
+				}
+				if msg != "".to_string() {
+					check_msg(message.channel_id.say(&format!("You recived thank you pieróg {}",msg)));
+				}
+			}
+			else {
+				check_msg(message.channel_id.say("I know your mommy told you to thank as much as you can, but this is too much"));
+			}
+		}
+	}
+}
 
 fn main() {
+	
 	let token = env::var("DISCORD_TOKEN")
 		.expect("Expected a token in the environment");
-	let mut client = Client::new(&token);
-	
-	client.with_framework(|f| f
+	let mut client = Client::new(&token, Handler);
+	client.with_framework(StandardFramework::new()
 		.bucket("basic", 5, 60, 3)
 		.configure(|c| c
 			.prefix("!")
@@ -47,7 +91,6 @@ fn main() {
 			.command("gnu", |c| c
 				.desc("GNU Interjection copypasta")
 				.usage("<GNU replacement> <Linux replacement>")
-				.use_quotes(true)
 				.exec(gnu))
 			.command("whiteface", |c| c
 				.desc("This is not the gif on the internet")
@@ -84,7 +127,7 @@ fn main() {
 				.desc("Shilling rust nature of this project")
 				.exec(rust))
 			.command("lcpae", |c| c
-			.exec_help(help_commands::with_embeds)))
+				.exec_help(help_commands::with_embeds)))
 		.group("Tux", |g| g
 			.command("roasted", |c| c
 				.desc("Daaaaaamn!")
@@ -95,109 +138,36 @@ fn main() {
 			.command("hyperthink", |c| c
 				.desc("TFW hacked mainframe")
 				.exec(hyperthink)))
-		.group("Coop", |g| g
-			.prefix("coop")
-
-			.command("leave", |c| c
-				.desc("TFW hacked mainframe")
-				.exec(leave))
-			.command("play", |c| c
-				.desc("TFW hacked mainframe")
-				.exec(play))
-			.command("join", |c| c
-				.desc("TFW hacked mainframe")
-				.exec(join))
-			.command("list", |c| c
-				.desc("TFW hacked mainframe")
-				.exec(list)))); //I don't exactly know why reading server id doesn't work, TODO
-	client.on_ready(|ctx, _| {ctx.set_game_name("lelcp.github.io");});
+		.group("Pierogi", |g| g
+			.prefix("pierog")
+			.command("score", |c| c
+				.desc("Check your own score")
+				.exec(score))
+			.command("top", |c| c
+				.desc("Check top 10 scoreboard")
+				.exec(hypertux))
+			.command("give", |c| c
+				.desc("Give pierogi to somebody else")
+				.exec(hyperthink))));
 	let _ = client.start().map_err(|why| println!("Client ended: {:?}", why));
 }
-
-command!(list(_ctx, msg) {
-	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
-		None => {
-			check_msg(msg.channel_id.say("Groups and DMs not supported"));
-
-			return Ok(());
-		},
-	};
-	CACHE.read().unwrap().guild(guild_id);
-		let dir = format!("servers/{}",guild_id);
-		check_msg(msg.channel_id.say(&coop::list(&dir)));
-});
-
-command!(join(_ctx, msg, args) {
-	let game = &args[0];
-	let joinerror = format!("<@!{}>, I'm so terribly sorry, but I couldn't add you to {} group, you already exist in this group",msg.author.id, game);
-	let joinaccept = format!("<@!{}>, You got added to {} group, play with us anytime",msg.author.id, game);
-	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
-		None => {
-			check_msg(msg.channel_id.say("Groups and DMs not supported"));
-
-			return Ok(());
-		},
-	};
-	CACHE.read().unwrap().guild(guild_id);
-		let dir = format!("servers/{}",guild_id);
-		let gamedir=format!("{}/{}.txt",&dir,game);
-		if coop::join(msg.author.id.to_string(), &gamedir) != 1 {
-			check_msg(msg.channel_id.say(&&joinaccept));
-		}
-		else {
-			check_msg(msg.channel_id.say(&&joinerror));
-		}
-});
-
-command!(leave(_ctx, msg, args) {
-	let game = &args[0];
-	let leaveerror = format!("<@!{}>, You got removed from {} group :crying_cat_face: ",msg.author.id, game);
-	let leaveaccept = format!("<@!{}>, You don't exist in {} group",msg.author.id, game);
-		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
-		None => {
-			check_msg(msg.channel_id.say("Groups and DMs not supported"));
-
-			return Ok(());
-		},
-	};
-	CACHE.read().unwrap().guild(guild_id);
-		let dir = format!("servers/{}",guild_id);
-		let gamedir=format!("{}/{}.txt",&dir,game);
-		if coop::leave(msg.author.id.to_string(), &gamedir) == 0 {
-			check_msg(msg.channel_id.say(&&format!("{}",leaveaccept)));
-		}
-		else {
-			check_msg(msg.channel_id.say(&&format!("{}",leaveerror)));
-		}
-
-});
-
-command!(play(_ctx, msg, args) {
-	let game = &args[0];
-		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
-		None => {
-			check_msg(msg.channel_id.say("Groups and DMs not supported"));
-
-			return Ok(());
-		},
-	};
-	CACHE.read().unwrap().guild(guild_id);
-		let dir = format!("servers/{}",guild_id);
-		let gamedir=format!("{}/{}.txt",&dir,game);
-		check_msg(msg.channel_id.say(&coop::play(&gamedir, &game)));
-});
-
-
 command!(github(_context, msg) {
 	check_msg(msg.channel_id.say("I mean, Github something or other is like here or something:\nhttps://github.com/LelCP/altego"));
 });
 
+command!(score(_context, msg) {
+	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().unwrap().guild_id,
+		None => {
+			check_msg(msg.channel_id.say(&"Groups and DMs not supported"));
+			return Ok(());
+		},
+	};
+	check_msg(msg.channel_id.say(format!("You got {} pierogi",&db::read_pierogi(&msg.author.id.to_string(),&guild_id.to_string()).to_string())));
+});
+
 command!(rust(_context, msg) {
-	let path = PathBuf::from("rust.txt");
+	let path = PathBuf::from("pastas/rust.txt");
 	check_msg(msg.channel_id.say(&com::read_to_string(&path)));
 });
 
@@ -542,7 +512,7 @@ command!(god(_ctx, msg) {
 	let a = between.ind_sample(&mut rng);
 	let mut lineset = format!(" ").to_string();
 	if Path::new("stallman.txt").exists() == true {
-		let mut file = File::open("stallman.txt").expect("opening file");
+		let mut file = File::open("pastas/stallman.txt").expect("opening file");
 		let mut text = String::new();
 		file.read_to_string(&mut text).expect("reading file");
 		for line in text.lines() {
@@ -587,7 +557,7 @@ command!(donkey(_ctx, msg) {
 	check_msg(msg.channel_id.say(&format!("{}, <@!{}>", dt,user_id )));
 	match guild_id.edit_nickname(Some("ԀƆ˥")) {
 		Ok(val)  => val,
-		Err(err) => return Err(err.to_string()),
+		Err(err) => return Err(err.into()),
 	};
 });
 
