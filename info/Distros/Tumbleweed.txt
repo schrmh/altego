@@ -1,12 +1,12 @@
 https://image.spreadshirtmedia.net/image-server/v1/designs/4359133,width=178,height=178/men-s-polo-green-badge.png
 #5812293
-**openSUSE Tumbleweed** is rolling release distro, one of the if not the most stable and tested rolling distributions available. Thanks to automated testing mainteiners of Tumbleweed can test packages and push them out much faster than any other distro. Yast, installer and power user tool installed with every openSUSE flavour allows for small size net or larger all-in-one install from CD, DVD or Pendrive.
+**openSUSE Tumbleweed** is a rolling release distro, one of the, if not most stable and tested rolling distributions available. Thanks to automated testing maintainers of Tumbleweed, it can test packages and push them out much faster than any other distro available. Yast, an installer and power user tool installed with every openSUSE flavour allows for small net-size or larger all-in-one install from CD, DVD or Pendrive.
 **Notable features**
-- Yast2, powerful system management tool / system installation tool breaking Linux traditions with GUI configuration for most config files and bringing much more understandable approach to many of them
-- Zypper, easy to use and powerful Package Manager with many options regarding updating, blocking and installing packages
-- OBS, easily build and install your favourite apps for many distributions at the same time
-- Snapper, easy to use snapshoting tool to reverse and controll changes on system if required
-- Apparmor, security module for mandatory access control to limit programs from abusing power and/or system resources
+- Yast2, a powerful system management tool / system installation tool breaking Linux traditions with GUI configuration for most config files and bringing a much more understandable approach to many of them.
+- Zypper, an easy to use and powerful Package Manager with many options regarding updating, blocking and installing packages.
+- OBS, easily build and install your favourite apps for many distributions at the same time.
+- Snapper, easy to use snapshooting tool to reverse and controll changes on system if required.
+- AppArmor, security module for mandatory access control to limit programs from abusing power and/or system resources
 **Available DEs**
 Thanks to *Patterns* :tm: and *1-Click Installs* :tm: Tumbleweed allows for much wider choice of DE than any other distro with much simpler installation process. Amongst those supported are:
 - KDE
