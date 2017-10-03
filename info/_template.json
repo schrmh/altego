@@ -1,0 +1,6 @@
+{
+	"image":"<URL to image in PNG form (I set it up this way for transparency goodness)>",
+	"colour":<RGB int from https://www.shodor.org/stella2java/rgbint.html>,
+	"text":"**<Name of distro>** is <description of distro>\n**Notable features**\n- <List of things>\n**Available DEs**\n- <Another list of things>\n**More info**\n<URL to distro page>",
+	"link":"<URL to distro page>"
+}

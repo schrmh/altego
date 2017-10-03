@@ -1,8 +1,0 @@
-http://manokwari.blankonlinux.or.id/img/logo.png
-#8388608
-**Manokwari** is a desktop shell for GNOME 3 with a Gtk+ and HTML5 frontend, providing a smooth and elegant experience free from clutter.
-**Notable features**
-- It's something new for people looking for an HTML5 solution to the desktop.
-- Has all of GNOME's quirks.
-**More info**
-http://manokwari.blankonlinux.or.id/

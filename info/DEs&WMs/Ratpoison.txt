@@ -1,9 +1,0 @@
-https://i.imgur.com/Ut4Z8fa.png
-#13565952
-**Ratpoison** is a simple Window Manager with no fat library dependencies, no fancy graphics, no window decorations, and no rodent dependence. It is largely modelled after GNU Screen which has done wonders in the virtual terminal market.
-**Notable features**
-- All windows are kept maximized inside their frames to take full advantage of screen real estate.
-- Uses a prefix map to minimize the key clobbering that cripples Emacs and similiar software.
-- Xinerama support.
-**More info**
-http://www.nongnu.org/ratpoison/

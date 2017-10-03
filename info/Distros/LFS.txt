@@ -1,9 +1,0 @@
-https://i.imgur.com/U2wL9Nl.png
-#13224393
-**Linux From Scratch (LFS)** is a project that provides you with the steps necessary to build your own custom Linux system! The most important reason for LFS's existence is teaching people how a Linux system works internally, how things 'tick', how everything depends on each other, and so on.
-**Notable features**
-- 100's of pages of pure Linux goodness.
-**Available DEs**
-- Think it, build it, and it shall be yours.
-**More info**
-http://www.linuxfromscratch.org/index.html

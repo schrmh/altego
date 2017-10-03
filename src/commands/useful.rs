@@ -6,6 +6,7 @@ extern crate ddg;
 extern crate serenity;
 extern crate rand;
 extern crate glob;
+extern crate json;
 
 use commands;
 
@@ -238,71 +239,56 @@ command!(emoji(_context, msg, args) {
 command!(info(_context, msg, args) {
 	if args.len() == 0 {
 		let mut list = format!("**You can learn about:**");
-		let mut distro = "**Distros:**".to_string();
-		let mut de = "**DEs & WMs**".to_string();
-		let mut other = "**Others**".to_string();
-		for entry in glob("info/**/*.txt").unwrap() {
+		let mut infocommand = "".to_string();
+		for entry in glob("info/*").unwrap() {
 		match entry {
-			Ok(path) => {
-				let welp = path.display().to_string().clone();
-				let mut split = welp.split('/');
-				let directory = split.nth(1).unwrap_or_default();
-				let noextension = commands::misc::replace(".txt", &split.next().unwrap_or_default(), "");
-				if !noextension.to_string().contains("_") {
-					if directory == "Distros" {
-						distro = format!("{}\n{}", &distro, &noextension);
-					}
-					else if directory == "DEs&WMs" {
-						de = format!("{}\n{}", &de, &noextension);
-					}
-					else if directory == "Others" {
-						other = format!("{}\n{}", &other, &noextension);
+			Ok(path_dir) => {
+			let dir = path_dir.display().to_string().clone();
+			let mut split_dir = dir.split('/');
+			let folder = split_dir.nth(1).unwrap_or_default();
+			if !folder.contains("_") {
+				infocommand = format!("{}\n**{}**", &infocommand, &folder);
+			}
+				for file in glob(&format!("{}/*.json", dir)).unwrap() {
+					match file {
+						Ok(path_file) => {
+							let welp = path_file.display().to_string().clone();
+							let mut split = welp.split('/');
+							let noextension = commands::misc::replace(".json", &split.nth(2).unwrap_or_default(), "");
+							if !noextension.to_string().contains("_") {
+								infocommand = format!("{}\n{}", &infocommand, &noextension);
+							}
+						},
+						Err(e) => println!("{:?}", e),
+						
 					}
 				}
 			},
 			Err(e) => println!("{:?}", e),
 			}
 		}
-	list = format!("{}\n{}\n{}\n{}",&mut list, distro, de, other);
+	list = format!("{}\n{}",&mut list, infocommand);
 	let _=msg.channel_id.send_message(|m| m.content(&list));
 	}
 	else {
-		let mut adress = "".to_string();
-		let mut image = "".to_string();
-		let mut colour = Colour::new(0);
 		let mut distro = &args[0];
-		for entry in glob("info/**/*.txt").unwrap() {
+		for entry in glob("info/**/*.json").unwrap() {
 		match entry {
 			Ok(path) => {
 				let welp = path.display().to_string().clone();
 				let mut split = welp.split('/');
-				let noextension = commands::misc::replace(".txt", &split.nth(2).unwrap_or_default(), "");
+				let noextension = commands::misc::replace(".json", &split.nth(2).unwrap_or_default(), "");
 				if distro.eq_ignore_ascii_case(&noextension) {
 					if !noextension.to_string().contains("_") {
-						let mut fulltext = "".to_string();
 						let text = commands::misc::read_to_string(&path);
-						for line in text.to_string().lines() {
-							if line.contains(".png") {
-								image = line.to_string();
-							}
-							else if line.contains("http") && adress == "" {
-								adress = line.to_string();
-								fulltext = format!("{}\n{}",fulltext, line.to_string());
-							}
-							else if line.contains("#") {
-								colour = Colour::new(commands::misc::replace("#", &line, "").parse::<u32>().unwrap());
-							}
-							else {
-								fulltext = format!("{}\n{}",fulltext, line.to_string());
-							}
-						}
+						let parsed = json::parse(&text).unwrap();
 						let _ = msg.channel_id.send_message(|m| m
 							.embed(|e| e
 							.title(&noextension)
-							.color(colour)
-							.thumbnail(&image)
-							.description(&fulltext)
-							.url(&adress)
+							.color(Colour::new(parsed["colour"].as_u32().unwrap()))
+							.thumbnail(parsed["image"].as_str().unwrap())
+							.description(parsed["text"].as_str().unwrap())
+							.url(parsed["link"].as_str().unwrap())
 						));
 					}
 				}

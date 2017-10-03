@@ -36,14 +36,14 @@ impl EventHandler for Handler {
 			let start = SystemTime::now();
     			let since_the_epoch = start.duration_since(UNIX_EPOCH)
        			.expect("Time went backwards");
-			if since_the_epoch.as_secs() >= commands::db::time_pierogi(&message.author.id.to_string(),&guild_id.to_string()) {
+			if since_the_epoch.as_secs() >= commands::pierogi::time_pierogi(&message.author.id.to_string(),&guild_id.to_string()) {
 				let mut msg: String = "".to_string();
 				for mention in message.mentions {
 					if message.author.id != mention.id {
 						msg = format!("{} <@{}>",msg,mention.id);
-						let pierogi = commands::db::read_pierogi(&mention.id.to_string(),&guild_id.to_string());
-						commands::db::new_pierogi(&mention.id.to_string(), &guild_id.to_string(), pierogi + 1, commands::db::time_pierogi(&mention.id.to_string(),&guild_id.to_string()));
-						commands::db::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), commands::db::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()), since_the_epoch.as_secs() + 28740);
+						let pierogi = commands::pierogi::read_pierogi(&mention.id.to_string(),&guild_id.to_string());
+						commands::pierogi::new_pierogi(&mention.id.to_string(), &guild_id.to_string(), pierogi + 1, commands::pierogi::time_pierogi(&mention.id.to_string(),&guild_id.to_string()));
+						commands::pierogi::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), commands::pierogi::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()), since_the_epoch.as_secs() + 28740);
 					}
 				}
 				if msg != "".to_string() {
