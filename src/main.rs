@@ -25,33 +25,37 @@ impl EventHandler for Handler {
 		ctx.set_game_name("lelcp.github.io/bot");
 	}
 	fn on_message(&self, _: Context, message: Message) {
-            if message.content.to_ascii_lowercase().contains("thanks") {
-			let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
-				Some(channel) => channel.read().unwrap().guild_id,
-				None => {
-					check_msg(message.channel_id.say(&"Groups and DMs not supported"));
-					return ();
-				},
-			};
-			let start = SystemTime::now();
-    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
-       			.expect("Time went backwards");
-			if since_the_epoch.as_secs() >= commands::pierogi::time_pierogi(&message.author.id.to_string(),&guild_id.to_string()) {
-				let mut msg: String = "".to_string();
-				for mention in message.mentions {
-					if message.author.id != mention.id {
-						msg = format!("{} <@{}>",msg,mention.id);
-						let pierogi = commands::pierogi::read_pierogi(&mention.id.to_string(),&guild_id.to_string());
-						commands::pierogi::new_pierogi(&mention.id.to_string(), &guild_id.to_string(), pierogi + 1, commands::pierogi::time_pierogi(&mention.id.to_string(),&guild_id.to_string()));
-						commands::pierogi::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), commands::pierogi::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()), since_the_epoch.as_secs() + 28740);
+		if !message.author.bot {
+			if message.content.to_ascii_lowercase().contains("thx") || message.content.to_ascii_lowercase().contains("thank"){
+				let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
+					Some(channel) => channel.read().unwrap().guild_id,
+					None => {
+						check_msg(message.channel_id.say(&"Groups and DMs not supported"));
+						return ();
+					},
+				};
+				let start = SystemTime::now();
+	    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
+	       			.expect("Time went backwards");
+	       			if message.mentions.len() > 0 {
+				if since_the_epoch.as_secs() >= commands::pierogi::time_pierogi(&message.author.id.to_string(),&guild_id.to_string()) {
+					let mut msg: String = "".to_string();
+						for mention in message.mentions {
+							if message.author.id != mention.id {
+								msg = format!("{} <@{}>",msg,mention.id);
+								let pierogi = commands::pierogi::read_pierogi(&mention.id.to_string(),&guild_id.to_string());
+								commands::pierogi::new_pierogi(&mention.id.to_string(), &guild_id.to_string(), pierogi + 1, commands::pierogi::time_pierogi(&mention.id.to_string(),&guild_id.to_string()));
+								commands::pierogi::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), commands::pierogi::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()), since_the_epoch.as_secs() + 7140);
+							}
+						}
+						if msg != "".to_string() {
+							check_msg(message.channel_id.say(&format!("You recived thank you pieróg {}",msg)));
+						}
+					}
+					else {
+						check_msg(message.channel_id.say(format!("<@{}>, I know your mommy told you to thank as much as you can, but this is too much",message.author.id)));
 					}
 				}
-				if msg != "".to_string() {
-					check_msg(message.channel_id.say(&format!("You recived thank you pieróg {}",msg)));
-				}
-			}
-			else {
-				check_msg(message.channel_id.say("I know your mommy told you to thank as much as you can, but this is too much"));
 			}
 		}
 	}
@@ -125,7 +129,12 @@ fn main() {
 				.exec(commands::pierogi::score))
 			.command("steal", |c| c
 				.desc("Steal pierogi, but be careful")
-				.exec(commands::pierogi::steal))));
+				.exec(commands::pierogi::steal))
+			.command("give", |c| c
+				.desc("Steal pierogi, but be careful")
+				.exec(commands::pierogi::give))
+		
+		));
 	let _ = client.start().map_err(|why| println!("Client ended: {:?}", why));
 }
 

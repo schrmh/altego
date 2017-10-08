@@ -9,6 +9,7 @@ use std::string::*;
 use serenity::utils::Colour;
 use serenity::utils::builder::CreateEmbedFooter;
 use serenity::client::CACHE;
+use serenity::utils::parse_quotes;
 use chrono::*;
 use rand::distributions::{IndependentSample, Range};
 use std::path::Path;
@@ -59,7 +60,7 @@ pub fn gnu_replacement(content: Vec<String>) -> String {
 
 command!(gnu(_context, msg, args) {
 	let paths = vec!["images/interjection.png"];
-	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&gnu_replacement(args.to_vec()))));
+	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&gnu_replacement(parse_quotes(&args.full())))));
 
 });
 command!(whiteface(_context, msg) {
