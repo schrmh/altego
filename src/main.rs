@@ -14,6 +14,7 @@ use serenity::client::{EventHandler,Context, CACHE};
 use std::env;
 use std::ascii::AsciiExt;
 use std::time::{SystemTime, UNIX_EPOCH};
+use serenity::model::permissions::Permissions;
 
 mod commands;
 
@@ -56,6 +57,9 @@ impl EventHandler for Handler {
 						check_msg(message.channel_id.say(format!("<@{}>, I know your mommy told you to thank as much as you can, but this is too much",message.author.id)));
 					}
 				}
+			}
+			else if message.content.to_ascii_lowercase().contains("i mean"){
+				let _ = message.channel_id.send_message(|m| m.content(format!("You mean <@{}> ?",message.author.id)));
 			}
 		}
 	}
@@ -122,6 +126,11 @@ fn main() {
 			.command("hyperthink", |c| c
 				.desc("TFW hacked mainframe")
 				.exec(commands::tux::hyperthink)))
+		.group("Admin", |g| g
+			.required_permissions(Permissions::ADMINISTRATOR)
+			.command("clear", |c| c
+				.desc("Clean previous messages")
+				.exec(commands::admin::clear)))
 		.group("Pierogi", |g| g
 			.prefix("pierog")
 			.command("score", |c| c
