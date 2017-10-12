@@ -1,0 +1,6 @@
+{
+	"image":"https://i.imgur.com/GneHMGB.png",
+	"colour":3699928,
+	"text":"**QubesOS** is a security-oriented operating system that runs other programs in addition to Linux based programs, all secluded from each other in a process called *security by compartmentalization. Keep security as your top priority.*\n**Notable features**\n- Run Microsoft Windows, Mac OS X, Android, and iOS applications in different compartments seamlessly.\n- Use disposable qubes to differentiate tasks according to priority.\n- Virtualize in different methods according to specs allowed.\n**Available DEs**\n- KDE4\n- Xfce\n**More info**\nhttps://www.qubes-os.org",
+	"link":"https://www.qubes-os.org"
+}
