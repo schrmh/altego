@@ -1,0 +1,6 @@
+{
+	"image":"https://i.imgur.com/XuzmN29.png",
+	"colour":29864,
+	"text":"**RancherOS** is a tiny Linux distribution that runs the entire operating system as Docker containers. This includes system services, such as udev and rsyslog. RancherOS includes only the bare minimum amount of software needed to run Docker.\n**Notable features**\n- Small download and installation.\n- Get up and running with Docker even on ARM boards such as the Raspberry Pi.\n**Available DEs**\n- N/A\n**More info**\nhttp://rancher.com/rancher-os/",
+	"link":"http://rancher.com/rancher-os/"
+}
