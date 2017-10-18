@@ -1,0 +1,6 @@
+{
+	"image":"https://i.imgur.com/ZB9uNO4.png",
+	"colour":1384237,
+	"text":"**UHU-Linux** is the leading distribution of Linux in Hungary. It is primarily intended for Hungarian users, thus special care is taken to support the Hungarian language as much as possible.\n**Notable features**\n- Ease of use OOTB with language and setting tweaks.\n- Older packages in favor of stability as LTS with dpkg as the manager.\n**Available DEs**\n- GNOME\n- KDE4\n- XFCE\n**More info**\nhttp://www.uhulinux.hu/",
+	"link":"http://www.uhulinux.hu/"
+}
