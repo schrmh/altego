@@ -1,0 +1,6 @@
+{
+	"image":"https://avatars3.githubusercontent.com/u/30185700?s=400&v=4.png",
+	"colour":2723790,
+	"text":"**Artix** is a fork of the Arch-OpenRC and Manjaro-OpenRC projects. Artix offers a lightweight, rolling-release operating system featuring the OpenRC init software.\n**Notable features**\n- Based on Arch Linux for the latest packages.\n- Be free of systemd.\n**Available DEs**\n- Minimal\n- i3\n- LXQt\n**More info**\nhttps://artixlinux.org/",
+	"link":"https://artixlinux.org/"
+}
