@@ -1,0 +1,6 @@
+{
+	"image":"https://i.imgur.com/T9bI4mI.png",
+	"colour":16750080,
+	"text":"**Clonezilla** is a Debian / Ubuntu based live CD containing Clonezilla, a partition and disk cloning software similar to Norton Ghost. It saves and restores only used blocks in hard drive. With Clonezilla, one can clone a 5 GB system to 40 clients in about 10 minutes.\n**Notable features**\n- Quickly and easily backup and restore from more than 5 sources in CLI.\n- Nearly all file systems are supported.\n- Bootloaders, including grub and syslinux, can be reinstalled.\n- Both architectures available, and bases to accommodate different hardware.\n- Guiding instructions advising on sources chosen, writing to disk, size mismatches etc.\n**Available DEs**\n- N/A\n**More info**\nhttp://clonezilla.org/",
+	"link":"http://clonezilla.org/"
+}

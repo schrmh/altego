@@ -1,0 +1,6 @@
+{
+	"image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Sabayon4foot.svg/1200px-Sabayon4foot.svg.png",
+	"colour":1052688,
+	"text":"**Sabayon** is a Gentoo-based distribution which follows the works-out-of-the-box philosophy, aiming to give the user a wide number of applications that are ready for use and a self-configured operating system.\n**Notable features**\n- Offers an easy-to-use workspace with a captivating look, good hardware detection and a large number of up-to-date software packages installed by default.\n- Standard Gentoo building available.\n**Available DEs**\n- GNOME\n- Fluxbox\n- KDE\n- MATE\n- Xfce\n**More info**\nhttps://www.sabayon.org/",
+	"link":"https://www.sabayon.org/"
+}
