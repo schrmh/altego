@@ -1,0 +1,6 @@
+{
+	"image":"https://i.imgur.com/2wHp4IV.png",
+	"colour":2785279,
+	"text":"**LXQt** is a lightweight desktop built on Qt which partly uses Razor-qt and LXDE components. Made not to get in your way, LXQt will not hang or slow down your system. It is focused on being a classic desktop with a modern look and feel.\n**Notable features**\n- Cross compatibility with GTK and Qt libs for a integrated desktop. \n- Falls between LXDE and Xfce in bloat and response, while being the latest tech of the two.\n**More info**\nhttp://lxqt.org/",
+	"link":"http://lxqt.org/"
+}
