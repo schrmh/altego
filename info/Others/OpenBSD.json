@@ -1,0 +1,6 @@
+{
+	"image":"https://i.imgur.com/CViU3Tc.png",
+	"colour":16312449,
+	"text":"**OpenBSD** is a project which produces a free, multi-platform BSD 4.4-based UNIX-like operating system. Its efforts emphasize portability, standardisation, correctness, proactive security and integrated cryptography.\n**Notable features**\n- Offers rock-solid and stable server usage, and desktops where applicable.\n- Uses the BSD kernel, but can still compile and run non-Linux specific software, and can run nearly everywhere.\n**Available DEs**\n- AfterStep\n- Awesome\n- Blackbox\n- Enlightenment\n- Fluxbox \n- GNOME\n- IceWM\n- KDE\n- Openbox\n- WMaker\n- Xfce\n**More info**\nhttps://www.sabayon.org/",
+	"link":"https://www.sabayon.org/"
+}
