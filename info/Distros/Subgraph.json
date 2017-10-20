@@ -1,0 +1,6 @@
+{
+	"image":"https://subgraph.com/img/sgos.png",
+	"colour":1446165,
+	"text":"**Subgraph OS** is a Debian-based Linux distribution which provides several security, anonymous web browsing and hardening features carefully integrated.\n**Notable features**\n- Uses a hardened Linux kernel, application firewall to block specific executables from accessing the network and forces all Internet traffic through the Tor network.\n- A file manager which features tools to remove meta-data from files and integrates with the OnionShare file sharing application.\n- Icedove e-mail client is set up to automatically work with Enigmail for encrypting e-mails.\n- Stable base, updated to the latest possible packages for security purposes.\n**Available DEs**\n- GNOME\n**More info**\nhttps://subgraph.com/sgos/index.en.html",
+	"link":"https://subgraph.com/sgos/index.en.html"
+}
