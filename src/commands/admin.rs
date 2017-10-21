@@ -20,20 +20,22 @@ command!(clear(_context, msg, args) {
 		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",countdown)));
 	}
 	else if args.len() == 1 {
-		let countdown: usize = match args[0].parse() {
+		let countdown: u64 = match args[0].parse() {
 			Ok(val)  => val,
 			Err(_err) => 0,
 		};
-		let counter: usize = match args[1].parse() {
+		let counter: u64 = match args[1].parse() {
 			Ok(val)  => val,
 			Err(_err) => 0,
 		};
 		let full = countdown + counter;
-		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(full as u64)) {
+		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(full)) {
 				let mut vec_id = Vec::new();
 				let mut i = 0;
-				while i < countdown {
-					vec_id.push(vec[i].id);
+				for message in vec {
+					if i < countdown {
+						vec_id.push(message.id);
+					}
 					i += 1;
 				}
 				vec_id.push(msg.id);
