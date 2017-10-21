@@ -51,14 +51,4 @@ command!(clear(_context, msg, args) {
 		}
 		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",args[0])));
 	}
-	for vec in msg.channel_id.messages(|g| g.after(msg.id).limit(1)) {
-		for message in vec {
-			match message.delete() {
-				Ok(val)  => val,
-				Err(_err) => (),
-			};
-		}
-	}
-	
-	
 });
