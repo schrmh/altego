@@ -35,6 +35,7 @@ command!(clear(_context, msg, args) {
 				for message in vec {
 					while i < counter {
 						vec_id.push(message.id);
+						i += 1;
 					}
 				}
 				vec_id.push(msg.id);
