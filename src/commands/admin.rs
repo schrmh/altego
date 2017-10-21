@@ -1,10 +1,6 @@
 extern crate serenity;
 
 command!(clear(_context, msg, args) {
-	match msg.delete() {
-		Ok(val)  => val,
-		Err(_err) => (),
-	};
 	if args.len() == 1 {
 		let countdown: u64 = match args[0].parse() {
 			Ok(val)  => val,
@@ -15,6 +11,7 @@ command!(clear(_context, msg, args) {
 				for message in vec {
 					vec_id.push(message.id);
 				}
+				vec_id.push(msg.id);
 				match msg.channel_id.delete_messages(vec_id.as_slice()) {
 					Ok(val)  => val,
 					Err(_err) => (),
@@ -44,6 +41,7 @@ command!(clear(_context, msg, args) {
 				for message in vec {
 					vec_id.push(message.id);
 				}
+				vec_id.push(msg.id);
 				match msg.channel_id.delete_messages(vec_id.as_slice()) {
 					Ok(val)  => val,
 					Err(_err) => (),
