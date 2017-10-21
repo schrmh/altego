@@ -23,7 +23,7 @@ command!(clear(_context, msg, args) {
 		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(full)) {
 				let mut vec_id = Vec::new();
 				let mut i = 0;
-				for message in vec {
+				for message in vec.iter().rev() {
 					if i < countdown {
 						vec_id.push(message.id);
 					}
