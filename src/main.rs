@@ -58,9 +58,6 @@ impl EventHandler for Handler {
 					}
 				}
 			}
-			else if message.content.to_ascii_lowercase().contains("i mean"){
-				let _ = message.channel_id.send_message(|m| m.content(format!("You mean <@{}> ?",message.author.id)));
-			}
 		}
 	}
 }
