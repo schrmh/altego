@@ -19,7 +19,7 @@ command!(clear(_context, msg, args) {
 		}
 		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",countdown)));
 	}
-	else if args.len() == 1 {
+	else if args.len() == 2 {
 		let countdown: u64 = match args[0].parse() {
 			Ok(val)  => val,
 			Err(_err) => 0,
