@@ -32,11 +32,11 @@ command!(clear(_context, msg, args) {
 		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(full)) {
 				let mut vec_id = Vec::new();
 				let mut i = 0;
-				for message in vec {
-					while i < countdown {
+				while i < countdown {
+					for message in vec {
 						vec_id.push(message.id);
+						i += 1;
 					}
-					i += 1;
 				}
 				vec_id.push(msg.id);
 				match msg.channel_id.delete_messages(vec_id.as_slice()) {
