@@ -17,7 +17,7 @@ command!(clear(_context, msg, args) {
 					Err(_err) => (),
 				};
 		}
-		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",args[0])));
+		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",countdown)));
 	}
 	else if args.len() == 2 {
 		let countdown: u64 = match args[0].parse() {
@@ -29,17 +29,13 @@ command!(clear(_context, msg, args) {
 			Err(_err) => 0,
 		};
 		let mut msg_id = msg.id;
-		if counter !=0 {
-			for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(counter)) {
-					for message in vec {
-						msg_id = message.id;
-					}
-			}
-		}
-		for vec in msg.channel_id.messages(|g| g.before(msg_id).limit(countdown)) {
+		for vec in msg.channel_id.messages(|g| g.before(msg_id).limit(countdown + counter)) {
 				let mut vec_id = Vec::new();
+				let mut i = 0;
 				for message in vec {
-					vec_id.push(message.id);
+					while i < counter {
+						vec_id.push(message.id);
+					}
 				}
 				vec_id.push(msg.id);
 				match msg.channel_id.delete_messages(vec_id.as_slice()) {
@@ -47,6 +43,6 @@ command!(clear(_context, msg, args) {
 					Err(_err) => (),
 				};
 		}
-		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",args[0])));
+		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",countdown)));
 	}
 });
