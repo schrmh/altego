@@ -173,7 +173,7 @@ command!(emoji(_context, msg, args) {
 	let mut world = "".to_string();
 	let mut woman = "".to_string();
 	let mut b = 0;
-	for arg in args.iter() {
+	for arg in args.full().split(' ') {
 		if !arg.contains("@") && !arg.contains("#") && !arg.contains(":"){
 			for letter in arg.bytes() {
 				let between = Range::new(0, 5);
