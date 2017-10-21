@@ -2,10 +2,7 @@ extern crate serenity;
 
 command!(clear(_context, msg, args) {
 	if args.len() == 1 {
-		let countdown: u64 = match args[0].parse() {
-			Ok(val)  => val,
-			Err(_err) => 0,
-		};
+		let countdown: u64 = args.find().unwrap_or_default();
 		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(countdown)) {
 				let mut vec_id = Vec::new();
 				for message in vec {
@@ -20,14 +17,8 @@ command!(clear(_context, msg, args) {
 		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",countdown)));
 	}
 	else if args.len() == 2 {
-		let countdown: u64 = match args[0].parse() {
-			Ok(val)  => val,
-			Err(_err) => 0,
-		};
-		let counter: u64 = match args[1].parse() {
-			Ok(val)  => val,
-			Err(_err) => 0,
-		};
+		let countdown: u64 = args.find().unwrap_or_default();
+		let counter: u64 = args.find().unwrap_or_default();
 		let full = countdown + counter;
 		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(full)) {
 				let mut vec_id = Vec::new();
