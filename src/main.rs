@@ -3,6 +3,7 @@ extern crate serenity;
 extern crate chrono;
 extern crate rand;
 extern crate time;
+extern crate json;
 
 use std::string::*;
 use serenity::model::*;
@@ -15,6 +16,17 @@ use std::env;
 use std::ascii::AsciiExt;
 use std::time::{SystemTime, UNIX_EPOCH};
 use serenity::model::permissions::Permissions;
+use std::path::Path;
+use self::json::*;
+use std::path::PathBuf;
+use std::fs::File;
+use std::io::Read;
+use std::string::*;
+use serenity::utils::Colour;
+use serenity::utils::builder::CreateEmbedFooter;
+use serenity::utils::parse_quotes;
+use chrono::*;
+use rand::distributions::{IndependentSample, Range};
 
 mod commands;
 
@@ -26,15 +38,15 @@ impl EventHandler for Handler {
 		ctx.set_game_name("lelcp.github.io/bot");
 	}
 	fn on_message(&self, _: Context, message: Message) {
+		let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
+			Some(channel) => channel.read().unwrap().guild_id,
+			None => {
+				check_msg(message.channel_id.say(&"Groups and DMs not supported"));
+				return ();
+			},
+		};
 		if !message.author.bot {
 			if message.content.to_ascii_lowercase().contains("thx") || message.content.to_ascii_lowercase().contains("thank"){
-				let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
-					Some(channel) => channel.read().unwrap().guild_id,
-					None => {
-						check_msg(message.channel_id.say(&"Groups and DMs not supported"));
-						return ();
-					},
-				};
 				let start = SystemTime::now();
 	    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
 	       			.expect("Time went backwards");
@@ -56,6 +68,20 @@ impl EventHandler for Handler {
 					else {
 						check_msg(message.channel_id.say(format!("<@{}>, I know your mommy told you to thank as much as you can, but this is too much",message.author.id)));
 					}
+				}
+			}
+			if Path::new(&format!("commands/{}/{}.json", guild_id, message.content)).exists() {
+				let path = PathBuf::from(&format!("commands/{}/{}.json", guild_id, message.content));
+				let text = commands::misc::read_to_string(&path);
+				let parsed = json::parse(&text).unwrap();
+				if parsed["image"].as_str().unwrap() != "" {
+					let _ = message.channel_id.send_message(|m| m
+						.embed(|e| e
+						.image(parsed["image"].as_str().unwrap())
+					));
+				}
+				if parsed["text"].as_str().unwrap() != "" {
+					check_msg(message.channel_id.say(&parsed["text"].as_str().unwrap()));
 				}
 			}
 		}
@@ -127,7 +153,10 @@ fn main() {
 			.required_permissions(Permissions::ADMINISTRATOR)
 			.command("clear", |c| c
 				.desc("Clean previous messages")
-				.exec(commands::admin::clear)))
+				.exec(commands::admin::clear))
+			.command("ccommand", |c| c
+				.desc("Custom commands")
+				.exec(commands::admin::ccommand)))
 		.group("Pierogi", |g| g
 			.prefix("pierog")
 			.command("score", |c| c
