@@ -1,3 +1,5 @@
+https://travis-ci.org/gutigen/altego.svg?branch=master
+
 # LCPAE Discord bot
 
 Blazingly fast Discord bot written in Rust using Serenity Discord API library, features:
