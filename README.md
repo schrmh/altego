@@ -1,4 +1,5 @@
-![LCPAE Logo](logo.svg "# LCPAE Discord bot")
+# LCPAE Discord bot
+![LCPAE Logo](logo.svg =100x100 "LCPAE")
 
 
 Blazingly fast Discord bot written in Rust using Serenity Discord API library, features:
