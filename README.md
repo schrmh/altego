@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gutigen/altego.svg?branch=master)](https://travis-ci.org/gutigen/altego)
+[![Build Status](https://travis-ci.org/LelCP/altego.svg?branch=master)](https://travis-ci.org/LelCP/altego)
 
 # Alter Ego Discord Bot
 <img src="logo.svg" alt="LCPAE" style="width: 100px;"/>
