@@ -87,7 +87,7 @@ fn main() {
 	let mut client = Client::new(&token, Handler);
 	client.with_framework(StandardFramework::new()
 		.before(|ctx, msg, cmd_name| {
-			println!("{} in {}: {}", msg.channel_id, msg.author.name, msg.content);
+			println!("{} in {}: {}", msg.author.id, msg.channel_id, msg.content);
 			true
 		})
 		.after(|ctx, msg, cmd_name, error| {
