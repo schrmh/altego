@@ -86,10 +86,20 @@ fn main() {
 		.expect("Expected a token in the environment");
 	let mut client = Client::new(&token, Handler);
 	client.with_framework(StandardFramework::new()
+		.before(|ctx, msg, cmd_name| {
+			println!("{} in {}: {}", msg.channel_id, msg.author.name, msg.content);
+			true
+		})
+		.after(|ctx, msg, cmd_name, error| {
+			if let Err(why) = error {
+				println!("Error in {}: {:?}", cmd_name, why);
+			}
+		})
 		.bucket("basic", 5, 60, 3)
 		.configure(|c| c
 			.prefix("!")
-			.on_mention(true))
+			.on_mention(true)
+			.case_insensitivity(true))
 		.group("Miscellaneous", |g| g
 			.command("gnu", |c| c
 				.desc("GNU Interjection copypasta")
