@@ -19,14 +19,6 @@ use serenity::model::permissions::Permissions;
 use std::path::Path;
 use self::json::*;
 use std::path::PathBuf;
-use std::fs::File;
-use std::io::Read;
-use std::string::*;
-use serenity::utils::Colour;
-use serenity::utils::builder::CreateEmbedFooter;
-use serenity::utils::parse_quotes;
-use chrono::*;
-use rand::distributions::{IndependentSample, Range};
 
 mod commands;
 

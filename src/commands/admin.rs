@@ -11,13 +11,7 @@ use std::io::BufWriter;
 use std::fs::DirBuilder;
 use std::string::*;
 use serenity::client::CACHE;
-use rand::distributions::{IndependentSample, Range};
-use std::path::PathBuf;
 use self::json::*;
-use std::fs;
-
-
-use commands;
 
 command!(clear(_context, msg, args) {
 	if args.len() == 1 {

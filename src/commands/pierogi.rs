@@ -35,7 +35,24 @@ pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 	}
 	return a;
 }
+pub fn read_verify(userid: &str, serverid: &str) -> u64 {
+	let a=0;
+	if Path::new(&format!("servers/{}/{}.json", serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("servers/{}/{}.json", serverid, userid));
+		let text = commands::misc::read_to_string(&path);
+		let parsed = json::parse(&text).unwrap();
+		return parsed["verify"].as_u64().unwrap();
+	}
+	return a;
+}
 pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
+	let mut verify: u64 = 0;
+	if Path::new(&format!("servers/{}/{}.json", serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("servers/{}/{}.json", serverid, userid));
+		let text = commands::misc::read_to_string(&path);
+		let parsed = json::parse(&text).unwrap();
+		verify = parsed["verify"].as_u64().unwrap();
+	}
 	if !Path::new(&format!("servers/{}", serverid)).exists() {
 		DirBuilder::new()
 			.recursive(true)
@@ -45,7 +62,8 @@ pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
 	file.set_len(0).unwrap();
 	let data = object!{
    		"pierogi" => pierogi,
-    		"ptimeout" => time
+    		"ptimeout" => time,
+    		"verify" => verify
 	};
 	let mut writer = BufWriter::new(&file);
 		writer.write_all(data.dump().as_bytes()).unwrap();;
