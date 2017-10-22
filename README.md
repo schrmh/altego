@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/LelCP/altego.svg?branch=master)](https://travis-ci.org/LelCP/altego)
-
 # Alter Ego Discord Bot ![LCPAE](images/logo.png)
-
 
 Blazingly fast Discord bot written in Rust using Serenity Discord API library, features:
 * slow Serenity framework
@@ -11,13 +9,17 @@ Blazingly fast Discord bot written in Rust using Serenity Discord API library, f
 ## How to use:
 
 ### Prerequisites
-
 Latest stable Rust which you can install from https://rustup.rs or up to date Docker https://www.docker.com/.
 
 ### Setup
 
-#### Rust from repositories or rustup.rs:
+#### First, clone repository and cd into it:
+``` bash
+git clone https://github.com/LelCP/altego.git
+cd altego
+```
 
+#### Rust from repositories or rustup.rs:
 ``` bash
 rustup override set stable
 cargo build --release
@@ -25,7 +27,6 @@ DISCORD_TOKEN=yourtoken ./target/release/lcpae
 ```
 
 #### Docker:
-
 ``` bash
 sudo docker build -t lcpae .
 sudo docker volume create lcpae-data
