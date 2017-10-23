@@ -3,7 +3,7 @@ extern crate serenity;
 extern crate chrono;
 extern crate rand;
 extern crate time;
-extern crate json;
+#[macro_use(object)] extern crate json;
 
 use std::string::*;
 use serenity::model::*;
@@ -17,7 +17,6 @@ use std::ascii::AsciiExt;
 use std::time::{SystemTime, UNIX_EPOCH};
 use serenity::model::permissions::Permissions;
 use std::path::Path;
-use self::json::*;
 use std::path::PathBuf;
 
 mod commands;
@@ -62,8 +61,8 @@ impl EventHandler for Handler {
 					}
 				}
 			}
-			if Path::new(&format!("commands/{}/{}.json", guild_id, message.content)).exists() {
-				let path = PathBuf::from(&format!("commands/{}/{}.json", guild_id, message.content));
+			if Path::new(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, message.content)).exists() {
+				let path = PathBuf::from(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, message.content));
 				let text = commands::misc::read_to_string(&path);
 				let parsed = json::parse(&text).unwrap();
 				if parsed["image"].as_str().unwrap() != "" {
@@ -86,11 +85,11 @@ fn main() {
 		.expect("Expected a token in the environment");
 	let mut client = Client::new(&token, Handler);
 	client.with_framework(StandardFramework::new()
-		.before(|ctx, msg, cmd_name| {
+		.before(|_ctx, msg, _cmd_name| {
 			println!("{} in {}: {}", msg.author.id, msg.channel_id, msg.content);
 			true
 		})
-		.after(|ctx, msg, cmd_name, error| {
+		.after(|_ctx, _msg, cmd_name, error| {
 			if let Err(why) = error {
 				println!("Error in {}: {:?}", cmd_name, why);
 			}

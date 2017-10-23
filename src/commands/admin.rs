@@ -11,7 +11,6 @@ use std::io::BufWriter;
 use std::fs::DirBuilder;
 use std::string::*;
 use serenity::client::CACHE;
-use self::json::*;
 
 command!(clear(_context, msg, args) {
 	if args.len() == 1 {
@@ -69,15 +68,15 @@ command!(ccommand(_context, msg, args) {
 				image = attachment.url;
 			}
 		}
-		if !Path::new(&format!("commands/{}", guild_id)).exists() {
+		if !Path::new(&format!("$XDG_DATA_HOME/.lcpae/commands/{}", guild_id)).exists() {
 			DirBuilder::new()
 				.recursive(true)
-				.create("commands/").unwrap();
+				.create("$XDG_DATA_HOME/.lcpae/commands/").unwrap();
 			DirBuilder::new()
 				.recursive(true)
-				.create(&format!("commands/{}/", guild_id)).unwrap();
+				.create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/", guild_id)).unwrap();
 		}
-		let file = File::create(&format!("commands/{}/{}.json", guild_id, alias)).unwrap();
+		let file = File::create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, alias)).unwrap();
 		file.set_len(0).unwrap();
 		let data = object!{
 	   		"text" => "",
@@ -100,15 +99,15 @@ command!(ccommand(_context, msg, args) {
 				image = attachment.url;
 			}
 		}
-		if !Path::new(&format!("commands/{}", guild_id)).exists() {
+		if !Path::new(&format!("$XDG_DATA_HOME/.lcpae/commands/{}", guild_id)).exists() {
 			DirBuilder::new()
 				.recursive(true)
-				.create("commands/").unwrap();
+				.create("$XDG_DATA_HOME/.lcpae/commands/").unwrap();
 			DirBuilder::new()
 				.recursive(true)
-				.create(&format!("commands/{}/", guild_id)).unwrap();
+				.create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/", guild_id)).unwrap();
 		}
-		let file = File::create(&format!("commands/{}/{}.json", guild_id, alias)).unwrap();
+		let file = File::create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, alias)).unwrap();
 		file.set_len(0).unwrap();
 		let data = object!{
 	   		"text" => arg_vec[1].as_str(),

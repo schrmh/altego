@@ -363,18 +363,18 @@ command!(wget(_context, msg, args) {
 		}
 	}
 	if verylongwgetlist != "" {
-		File::create("wget_list").unwrap();
-		if Path::new("wget_list").exists() == true {
+		File::create("$XDG_DATA_HOME/.lcpae/wget_list").unwrap();
+		if Path::new("$XDG_DATA_HOME/.lcpae/wget_list").exists() == true {
 			let writes = OpenOptions::new()
 				.write(true)
-				.open("wget_list")
+				.open("$XDG_DATA_HOME/.lcpae/wget_list")
 				.unwrap();
 			writes.set_len(0).unwrap();
 			let mut writer = BufWriter::new(&writes);
 				writer.write_all(verylongwgetlist.as_bytes()).unwrap();;
 		}
-	let path = vec!["wget_list"];
+	let path = vec!["$XDG_DATA_HOME/.lcpae/wget_list"];
 	let _ = msg.channel_id.send_files(path, |m| m.content("Use it as `wget --input-file=wget-list` in directory in which you want files to save files\n\nHave fun :D"));
-	fs::remove_file("wget_list").unwrap();
+	fs::remove_file("$XDG_DATA_HOME/.lcpae/wget_list").unwrap();
 	}
 });
