@@ -53,7 +53,7 @@ command!(clear(_context, msg, args) {
 });
 
 command!(ccommand(_context, msg, args) {
-	let home = env::var("XDG_DATA_HOME")
+	let home = env::var("HOME")
 		.expect("Expected a token in the environment");
 	let arg_vec = parse_quotes(&args.full());
 	let mut image = "".to_string();

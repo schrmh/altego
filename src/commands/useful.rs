@@ -363,7 +363,7 @@ command!(wget(_context, msg, args) {
 			counter += 1;	
 		}
 	}
-	let home = env::var("XDG_DATA_HOME")
+	let home = env::var("HOME")
 		.expect("Expected a token in the environment");
 	if verylongwgetlist != "" {
 		File::create(format!("{}/.lcpae/wget_list", home)).unwrap();

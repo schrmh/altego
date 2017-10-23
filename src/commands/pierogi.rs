@@ -16,7 +16,7 @@ use commands;
 
 pub fn read_pierogi(userid: &str, serverid: &str) -> u8 {
 	let a=0;
-	let home = env::var("XDG_DATA_HOME")
+	let home = env::var("HOME")
 		.expect("Expected a token in the environment");
 	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
 		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
@@ -28,7 +28,7 @@ pub fn read_pierogi(userid: &str, serverid: &str) -> u8 {
 }
 pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 	let a=0;
-	let home = env::var("XDG_DATA_HOME")
+	let home = env::var("HOME")
 		.expect("Expected a token in the environment");
 	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
 		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
@@ -40,7 +40,7 @@ pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 }
 pub fn read_verify(userid: &str, serverid: &str) -> u64 {
 	let a=0;
-	let home = env::var("XDG_DATA_HOME")
+	let home = env::var("HOME")
 		.expect("Expected a token in the environment");
 	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
 		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
@@ -52,7 +52,7 @@ pub fn read_verify(userid: &str, serverid: &str) -> u64 {
 }
 pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
 	let mut verify: u64 = 0;
-	let home = env::var("XDG_DATA_HOME")
+	let home = env::var("HOME")
 		.expect("Expected a token in the environment");
 	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
 		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
