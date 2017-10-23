@@ -30,7 +30,7 @@ DISCORD_TOKEN=yourtoken ./target/release/lcpae
 ``` bash
 sudo docker build -t lcpae .
 sudo docker volume create lcpae-data
-sudo docker run -it -d --name lcpae -v lcpae-data:/lcpae-data -e DISCORD_TOKEN=yourtoken lcpae
+sudo docker run -it -d --name lcpae --restart unless-stopped -v lcpae-data:/root/.lcpae -e DISCORD_TOKEN=yourtoken lcpae
 ```
 
 Learn more about Docker [here](https://docs.docker.com/get-started/)
