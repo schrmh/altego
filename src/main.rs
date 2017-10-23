@@ -61,7 +61,7 @@ impl EventHandler for Handler {
 					}
 				}
 			}
-			let home = env::var("XDG_DATA_HOME")
+			let home = env::var("HOME")
 				.expect("Expected a token in the environment");
 			if Path::new(&format!("{}/.lcpae/commands/{}/{}.json", home, guild_id, message.content)).exists() {
 				let path = PathBuf::from(&format!("{}/.lcpae/commands/{}/{}.json", home, guild_id, message.content));
