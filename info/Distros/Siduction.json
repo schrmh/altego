@@ -1,0 +1,6 @@
+{
+	"image":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Siduction_logo.svg/600px-Siduction_logo.svg.png",
+	"colour":3956628,
+	"text":"**siduction** is a desktop-oriented operating system and live medium based on the "unstable" branch of Debian GNU/Linux. Forked from aptosid in late 2011, siduction promises regular releases, an open development model, and friendly relationship with its developer and user community.\n**Notable features**\n- More OOTB and provided version of Debian Sid.\n**Available DEs**\n- Cinnamon\n- Fluxbox\n- GNOME\n- KDE\n- LXDE\n- LXQt\n- MATE\n- Xfce\n**More info**\nhttps://forum.siduction.org/",
+	"link":"https://forum.siduction.org/"
+}
