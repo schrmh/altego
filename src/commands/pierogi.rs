@@ -10,13 +10,16 @@ use std::string::*;
 use serenity::client::CACHE;
 use rand::distributions::{IndependentSample, Range};
 use std::path::PathBuf;
+use std::env;
 use json;
 use commands;
 
 pub fn read_pierogi(userid: &str, serverid: &str) -> u8 {
 	let a=0;
-	if Path::new(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid));
+	let home = env::var("XDG_DATA_HOME")
+		.expect("Expected a token in the environment");
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		return parsed["pierogi"].as_u8().unwrap();
@@ -25,8 +28,10 @@ pub fn read_pierogi(userid: &str, serverid: &str) -> u8 {
 }
 pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 	let a=0;
-	if Path::new(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid));
+	let home = env::var("XDG_DATA_HOME")
+		.expect("Expected a token in the environment");
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		return parsed["ptimeout"].as_u64().unwrap();
@@ -35,8 +40,10 @@ pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 }
 pub fn read_verify(userid: &str, serverid: &str) -> u64 {
 	let a=0;
-	if Path::new(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid));
+	let home = env::var("XDG_DATA_HOME")
+		.expect("Expected a token in the environment");
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		return parsed["verify"].as_u64().unwrap();
@@ -45,18 +52,20 @@ pub fn read_verify(userid: &str, serverid: &str) -> u64 {
 }
 pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
 	let mut verify: u64 = 0;
-	if Path::new(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid));
+	let home = env::var("XDG_DATA_HOME")
+		.expect("Expected a token in the environment");
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		verify = parsed["verify"].as_u64().unwrap();
 	}
-	if !Path::new(&format!("$XDG_DATA_HOME/.lcpae/servers/{}", serverid)).exists() {
+	if !Path::new(&format!("{}/.lcpae/servers/{}", home, serverid)).exists() {
 		DirBuilder::new()
 			.recursive(true)
-			.create(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/", serverid)).unwrap();
+			.create(&format!("{}/.lcpae/servers/{}/",home, serverid)).unwrap();
 	}
-	let file = File::create(&format!("$XDG_DATA_HOME/.lcpae/servers/{}/{}.json", serverid, userid)).unwrap();
+	let file = File::create(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).unwrap();
 	file.set_len(0).unwrap();
 	let data = object!{
    		"pierogi" => pierogi,

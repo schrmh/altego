@@ -11,6 +11,7 @@ use std::io::BufWriter;
 use std::fs::DirBuilder;
 use std::string::*;
 use serenity::client::CACHE;
+use std::env;
 
 command!(clear(_context, msg, args) {
 	if args.len() == 1 {
@@ -52,6 +53,8 @@ command!(clear(_context, msg, args) {
 });
 
 command!(ccommand(_context, msg, args) {
+	let home = env::var("XDG_DATA_HOME")
+		.expect("Expected a token in the environment");
 	let arg_vec = parse_quotes(&args.full());
 	let mut image = "".to_string();
 	if arg_vec.len() == 1 {
@@ -68,15 +71,15 @@ command!(ccommand(_context, msg, args) {
 				image = attachment.url;
 			}
 		}
-		if !Path::new(&format!("$XDG_DATA_HOME/.lcpae/commands/{}", guild_id)).exists() {
+		if !Path::new(&format!("{}/.lcpae/commands/{}",home, guild_id)).exists() {
 			DirBuilder::new()
 				.recursive(true)
-				.create("$XDG_DATA_HOME/.lcpae/commands/").unwrap();
+				.create(format!("{}/.lcpae/commands/",home)).unwrap();
 			DirBuilder::new()
 				.recursive(true)
-				.create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/", guild_id)).unwrap();
+				.create(&format!("{}/.lcpae/commands/{}/",home, guild_id)).unwrap();
 		}
-		let file = File::create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, alias)).unwrap();
+		let file = File::create(&format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).unwrap();
 		file.set_len(0).unwrap();
 		let data = object!{
 	   		"text" => "",
@@ -99,15 +102,15 @@ command!(ccommand(_context, msg, args) {
 				image = attachment.url;
 			}
 		}
-		if !Path::new(&format!("$XDG_DATA_HOME/.lcpae/commands/{}", guild_id)).exists() {
+		if !Path::new(&format!("{}/.lcpae/commands/{}",home, guild_id)).exists() {
 			DirBuilder::new()
 				.recursive(true)
-				.create("$XDG_DATA_HOME/.lcpae/commands/").unwrap();
+				.create(format!("{}/.lcpae/commands/",home)).unwrap();
 			DirBuilder::new()
 				.recursive(true)
-				.create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/", guild_id)).unwrap();
+				.create(&format!("{}/.lcpae/commands/{}/",home, guild_id)).unwrap();
 		}
-		let file = File::create(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, alias)).unwrap();
+		let file = File::create(&format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).unwrap();
 		file.set_len(0).unwrap();
 		let data = object!{
 	   		"text" => arg_vec[1].as_str(),

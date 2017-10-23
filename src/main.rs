@@ -61,8 +61,10 @@ impl EventHandler for Handler {
 					}
 				}
 			}
-			if Path::new(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, message.content)).exists() {
-				let path = PathBuf::from(&format!("$XDG_DATA_HOME/.lcpae/commands/{}/{}.json", guild_id, message.content));
+			let home = env::var("XDG_DATA_HOME")
+				.expect("Expected a token in the environment");
+			if Path::new(&format!("{}/.lcpae/commands/{}/{}.json", home, guild_id, message.content)).exists() {
+				let path = PathBuf::from(&format!("{}/.lcpae/commands/{}/{}.json", home, guild_id, message.content));
 				let text = commands::misc::read_to_string(&path);
 				let parsed = json::parse(&text).unwrap();
 				if parsed["image"].as_str().unwrap() != "" {

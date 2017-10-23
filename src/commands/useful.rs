@@ -29,6 +29,7 @@ use std::path::Path;
 use std::io::{BufWriter,Read};
 use std::fs;
 use std::io::prelude::*;
+use std::env;
 
 pub fn read_ddg(res: &str, num: i8) -> String {
 	let new = commands::misc::replace(" ",&res,"+");
@@ -362,19 +363,22 @@ command!(wget(_context, msg, args) {
 			counter += 1;	
 		}
 	}
+	let home = env::var("XDG_DATA_HOME")
+		.expect("Expected a token in the environment");
 	if verylongwgetlist != "" {
-		File::create("$XDG_DATA_HOME/.lcpae/wget_list").unwrap();
-		if Path::new("$XDG_DATA_HOME/.lcpae/wget_list").exists() == true {
+		File::create(format!("{}/.lcpae/wget_list", home)).unwrap();
+		if Path::new(&format!("{}/.lcpae/wget_list", home)).exists() == true {
 			let writes = OpenOptions::new()
 				.write(true)
-				.open("$XDG_DATA_HOME/.lcpae/wget_list")
+				.open(format!("{}/.lcpae/wget_list", home))
 				.unwrap();
 			writes.set_len(0).unwrap();
 			let mut writer = BufWriter::new(&writes);
 				writer.write_all(verylongwgetlist.as_bytes()).unwrap();;
 		}
-	let path = vec!["$XDG_DATA_HOME/.lcpae/wget_list"];
+	let file = &format!("{}/.lcpae/wget_list", home);
+	let path: Vec<&str> = vec![file];
 	let _ = msg.channel_id.send_files(path, |m| m.content("Use it as `wget --input-file=wget-list` in directory in which you want files to save files\n\nHave fun :D"));
-	fs::remove_file("$XDG_DATA_HOME/.lcpae/wget_list").unwrap();
+	fs::remove_file(format!("{}/.lcpae/wget_list", home)).unwrap();
 	}
 });
