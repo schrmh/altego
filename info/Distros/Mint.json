@@ -1,0 +1,6 @@
+{
+	"image":"https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_Linux_Mint.png",
+	"colour":10082138,
+	"text":"**Linux Mint** is an Ubuntu-based distribution whose goal is to provide a complete out-of-the-box experience by including browser plugins, support for DVD playback, Java and other components. It also adds a custom desktop and menus, several unique configuration tools, and a web-based package installation interface. It is the most popular meme distro of all time.\n**Notable features**\n- Custom, new applications providing for alternative cases for video, audio and work.\n- All Ubuntu packages are compatible (although exercising caution is advised to avoid breakage). \n- Home to the latest Cinnamon packaged.\n**Available DEs**\n- Cinnamon\n- GNOME\n- KDE\n- MATE\n- Xfce\n**More info**\nhttps://linuxmint.com/",
+	"link":"https://linuxmint.com/"
+}
