@@ -39,6 +39,7 @@ impl EventHandler for Handler {
 		if !message.author.bot {
 			if message.content.to_ascii_lowercase().contains("thx") || message.content.to_ascii_lowercase().contains("thank"){
 				let start = SystemTime::now();
+				let mut botmention = false;
 	    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
 	       			.expect("Time went backwards");
 	       			if message.mentions.len() > 0 {
@@ -50,10 +51,19 @@ impl EventHandler for Handler {
 								let pierogi = commands::pierogi::read_pierogi(&mention.id.to_string(),&guild_id.to_string());
 								commands::pierogi::new_pierogi(&mention.id.to_string(), &guild_id.to_string(), pierogi + 1, commands::pierogi::time_pierogi(&mention.id.to_string(),&guild_id.to_string()));
 								commands::pierogi::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), commands::pierogi::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()), since_the_epoch.as_secs() + 7140);
+								if mention.id == CACHE.read().unwrap().user.id {
+									botmention = true;
+									commands::pierogi::new_pierogi(&message.author.id.to_string(), &guild_id.to_string(), commands::pierogi::read_pierogi(&message.author.id.to_string(),&guild_id.to_string()) + 1, since_the_epoch.as_secs() + 7140);
+								}
 							}
 						}
 						if msg != "".to_string() {
-							check_msg(message.channel_id.say(&format!("You recived thank you pieróg {}",msg)));
+							if botmention {
+								check_msg(message.channel_id.say(&format!("You recived thank you pieróg {}. Oh wait, pierogi for me? ***THANK YOU SO MUCH, YOU TOO GET A PIERÓG***",msg)));
+							}
+							else {
+								check_msg(message.channel_id.say(&format!("You recived thank you pieróg {}",msg)));
+							}
 						}
 					}
 					else {
