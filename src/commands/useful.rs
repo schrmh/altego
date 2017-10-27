@@ -30,6 +30,7 @@ use std::io::{BufWriter,Read};
 use std::fs;
 use std::io::prelude::*;
 use std::env;
+use serenity::client::CACHE;
 
 pub fn read_ddg(res: &str, num: i8) -> String {
 	let new = commands::misc::replace(" ",&res,"+");
@@ -382,3 +383,32 @@ command!(wget(_context, msg, args) {
 	fs::remove_file(format!("{}/.lcpae/wget_list", home)).unwrap();
 	}
 });
+command!(clist(_context, msg) {
+	let mut list = format!("**You can use commands:**");
+	let home = env::var("HOME")
+		.expect("Expected a token in the environment");
+	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().unwrap().guild_id,
+		None => {
+			let _ = msg.channel_id.send_message(|m| m.content("Groups and DMs not supported"));
+			return Ok(());
+		},
+	};
+	for file in glob(&format!("{}/.lcpae/commands/{}/*.json",home,guild_id)).unwrap() {
+		match file {
+			Ok(path_file) => {
+				let welp = path_file.display().to_string().clone();
+				let mut split = welp.split('/');
+				let noextension = commands::misc::replace(".json", &split.nth(2).unwrap_or_default(), "");
+				if !noextension.to_string().contains("_") {
+					list = format!("{}\n{}", &list, &noextension);
+				}
+			},
+			Err(e) => println!("{:?}", e),
+						
+			}
+		}
+	let _=msg.channel_id.send_message(|m| m.content(&list));
+});
+
+

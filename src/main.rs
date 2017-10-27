@@ -142,7 +142,10 @@ fn main() {
 			.command("wget", |c| c
 				.desc("Sends wget script")
 				.usage("<amount of messages in hundreds to download from channel>")
-				.exec(commands::useful::wget)))
+				.exec(commands::useful::wget))
+			.command("clist", |c| c
+				.desc("List custom commands")
+				.exec(commands::useful::clist)))
 		.group("About bot", |g| g
 			.command("github", |c| c
 				.desc("Shilling open source nature of this project")
@@ -167,6 +170,9 @@ fn main() {
 			.command("clear", |c| c
 				.desc("Clean previous messages")
 				.exec(commands::admin::clear))
+			.command("cremove", |c| c
+				.desc("Remove custom command")
+				.exec(commands::admin::cremove))
 			.command("ccommand", |c| c
 				.desc("Custom commands")
 				.exec(commands::admin::ccommand)))

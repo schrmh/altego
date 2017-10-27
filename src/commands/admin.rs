@@ -12,6 +12,7 @@ use std::fs::DirBuilder;
 use std::string::*;
 use serenity::client::CACHE;
 use std::env;
+use std::fs;
 
 command!(clear(_context, msg, args) {
 	if args.len() == 1 {
@@ -58,7 +59,7 @@ command!(ccommand(_context, msg, args) {
 	let arg_vec = parse_quotes(&args.full());
 	let mut image = "".to_string();
 	if arg_vec.len() == 1 {
-		let alias = &arg_vec[0];
+		let alias = &arg_vec[0].to_lowercase();
 		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 			Some(channel) => channel.read().unwrap().guild_id,
 			None => {
@@ -89,7 +90,7 @@ command!(ccommand(_context, msg, args) {
 			writer.write_all(data.dump().as_bytes()).unwrap();;
 	}
 	else if arg_vec.len() == 2 {
-		let alias = &arg_vec[0];
+		let alias = &arg_vec[0].to_lowercase();
 		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 			Some(channel) => channel.read().unwrap().guild_id,
 			None => {
@@ -118,5 +119,24 @@ command!(ccommand(_context, msg, args) {
 		};
 		let mut writer = BufWriter::new(&file);
 			writer.write_all(data.dump().as_bytes()).unwrap();;
+	}
+});
+
+command!(cremove(_context, msg, args) {
+	let home = env::var("HOME")
+		.expect("Expected a token in the environment");
+	let arg_vec = parse_quotes(&args.full());
+	if arg_vec.len() == 1 {
+		let alias = &arg_vec[0].to_lowercase();
+		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
+			Some(channel) => channel.read().unwrap().guild_id,
+			None => {
+				let _ = msg.channel_id.send_message(|m| m.content("Groups and DMs not supported"));
+				return Ok(());
+			},
+		};
+		if Path::new(&format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).exists() == true {
+			fs::remove_file(format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).unwrap();
+		}
 	}
 });
