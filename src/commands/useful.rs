@@ -399,7 +399,7 @@ command!(clist(_context, msg) {
 			Ok(path_file) => {
 				let welp = path_file.display().to_string().clone();
 				let mut split = welp.split('/');
-				let noextension = commands::misc::replace(".json", &split.nth(2).unwrap_or_default(), "");
+				let noextension = commands::misc::replace(".json", &split.last().unwrap_or_default(), "");
 				if !noextension.to_string().contains("_") {
 					list = format!("{}\n{}", &list, &noextension);
 				}
