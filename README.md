@@ -35,6 +35,12 @@ docker run -it -d --name lcpae --restart unless-stopped -v lcpae-data:/root/.lcp
 
 Learn more about Docker [here](https://docs.docker.com/get-started/)
 
+#### Automatic updates with Docker using Watchtower:
+```
+docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower
+```
+More [here](https://github.com/v2tec/watchtower)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
