@@ -28,12 +28,18 @@ DISCORD_TOKEN=yourtoken ./target/release/lcpae
 
 #### Docker:
 ``` bash
-sudo docker build -t lcpae .
-sudo docker volume create lcpae-data
-sudo docker run -it -d --name lcpae --restart unless-stopped -v lcpae-data:/root/.lcpae -e DISCORD_TOKEN=yourtoken lcpae
+docker docker pull fuckinlcp/altego
+docker volume create lcpae-data
+docker run -it -d --name lcpae --restart unless-stopped -v lcpae-data:/root/.lcpae -e DISCORD_TOKEN=yourtoken fuckinlcp/altego
 ```
 
 Learn more about Docker [here](https://docs.docker.com/get-started/)
+
+#### Automatic updates with Docker using Watchtower:
+```
+docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower
+```
+More [here](https://github.com/v2tec/watchtower)
 
 ## License
 
