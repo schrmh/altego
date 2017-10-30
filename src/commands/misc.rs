@@ -63,9 +63,6 @@ command!(gnu(_context, msg, args) {
 	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&gnu_replacement(parse_quotes(&args.full())))));
 
 });
-command!(whiteface(_context, msg) {
-	let _= msg.channel_id.send_message(|m| m.content(&"https://i.redd.it/fhrd8f2gpxjz.gif"));
-});
 
 command!(god(_ctx, msg) {
 	let mut count = 0;

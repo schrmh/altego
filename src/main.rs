@@ -116,9 +116,6 @@ fn main() {
 				.desc("GNU Interjection copypasta")
 				.usage("<GNU replacement> <Linux replacement>")
 				.exec(commands::misc::gnu))
-			.command("whiteface", |c| c
-				.desc("This is not the gif on the internet")
-				.exec(commands::misc::whiteface))
 			.command("godtellmeyourways", |c| c
 				.desc("Quote God himself, Richard Matthew Stallman")
 				.exec(commands::misc::god))
