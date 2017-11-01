@@ -1,6 +1,0 @@
-{
-	"image":"",
-	"colour": 65280,
-	"text":"**<NVIDIA Optimus>** is a technology that allows an Intel integrated GPU and discrete NVIDIA GPU to be built into and accessed by a laptop.\n**Notes**\n- Nvidia Optimus is very delicate on Linux.\n- As of October 2017, Arch linux and Ubuntu are the best distros for Nvidia Optimus devices. \n**Important Links:**\n- <https://wiki.archlinux.org/index.php/NVIDIA_Optimus>\n- <https://wiki.archlinux.org/index.php/Bumblebee>\n- <https://github.com/Witko/nvidia-xrun>\n",
-	"link":""
-}
