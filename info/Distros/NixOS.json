@@ -1,0 +1,6 @@
+{
+	"image":"https://nixos.org/logo/nixos-logo-only-hires.png",
+	"colour":8304610,
+	"text":"**NixOS** is an independently developed GNU/Linux distribution that aims to improve the state of the art in system configuration management. In NixOS, the entire operating system, including the kernel, applications, system packages and configuration files, are built by the Nix package manager. Nix stores all packages in isolation from each other; as a result there are no /bin, /sbin, /lib or /usr directories and all packages are kept in /nix/store instead.\n**Notable features**\n- Includes reliable upgrades, rollbacks and reproducible system configurations.\n- Source-based model with binaries, and multi-user package management.\n**Available DEs**\n- Awesome\n- Enlightenment\n- Fluxbox\n- GNOME\n- i3\n- IceWM\n- KDE\n- Ratpoison\n- Xfce\n**More info**\nhttps://nixos.org/",
+	"link":"https://nixos.org/"
+}
