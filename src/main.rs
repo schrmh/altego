@@ -152,16 +152,6 @@ fn main() {
 				.exec(commands::about::rust))
 			.command("lcpae", |c| c
 				.exec_help(help_commands::with_embeds)))
-		.group("Tux", |g| g
-			.command("roasted", |c| c
-				.desc("Daaaaaamn!")
-				.exec(commands::tux::roasted))
-			.command("hypertux", |c| c
-				.desc("Laugh all you want")
-				.exec(commands::tux::hypertux))
-			.command("hyperthink", |c| c
-				.desc("TFW hacked mainframe")
-				.exec(commands::tux::hyperthink)))
 		.group("Admin", |g| g
 			.required_permissions(Permissions::ADMINISTRATOR)
 			.command("clear", |c| c
