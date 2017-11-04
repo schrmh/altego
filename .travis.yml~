@@ -7,7 +7,7 @@ matrix:
   allow_failures:
     - rust: nightly
 before_install:
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe"
+  - sudo apt-add-repo universe
   - sudo apt-get -qq update
   - sudo apt-get install -y libopus-dev libsodium-dev
 script:
