@@ -123,30 +123,30 @@ fn main() {
 			.command("donkey", |c| c
 				.desc("Show current bot time and set nickname and playing message")
 				.exec(commands::misc::donkey)))
-			.group("Voice stuff", |g| g
-				.command("deafen", |c| c
-						.desc("Deafen")
-						.exec(commands::voice::deafen))
-				.command("join", |c| c
-						.desc("Make bot join voice channel")
-						.exec(commands::voice::join))
-				.command("leave", |c| c
-						.desc("Make the bot leave voice channel")
-						.exec(commands::voice::leave))
-				.command("mute", |c| c
-						.desc("Mute")
-						.exec(commands::voice::mute))
-				.command("play", |c| c
-						.desc("Make bot play music")
-						.usage("<url>")
-						.exec(commands::voice::play))
-				.command("undeafen", |c| c
-						.desc("Undeafen")
-						.exec(commands::voice::undeafen))
-				.command("unmute", |c| c
-						.desc("Unmute")
-						.usage("<search terms>")
-						.exec(commands::voice::unmute)))
+		.group("Voice stuff", |g| g
+			.prefix("voice")
+			.command("deafen", |c| c
+					.desc("Deafen")
+					.exec(commands::voice::deafen))
+			.command("join", |c| c
+					.desc("Make bot join voice channel")
+					.exec(commands::voice::join))
+			.command("leave", |c| c
+					.desc("Make the bot leave voice channel")
+					.exec(commands::voice::leave))
+			.command("mute", |c| c
+					.desc("Mute")
+					.exec(commands::voice::mute))
+			.command("play", |c| c
+					.desc("Make bot play music")
+					.usage("<url>")
+					.exec(commands::voice::play))
+			.command("undeafen", |c| c
+					.desc("Undeafen")
+					.exec(commands::voice::undeafen))
+			.command("unmute", |c| c
+					.desc("Unmute")
+					.exec(commands::voice::unmute)))
 		.group("Useful shit", |g| g
 			.command("ddg", |c| c
 				.desc("Powerful search with embeds")
