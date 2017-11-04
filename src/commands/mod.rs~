@@ -3,4 +3,3 @@ pub mod misc;
 pub mod pierogi;
 pub mod about;
 pub mod admin;
-pub mod voice;
