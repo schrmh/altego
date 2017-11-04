@@ -228,7 +228,7 @@ command!(emoji(_context, msg, args) {
 		hello = format!("{}   ",hello);
 		world = format!("{}   ",world);
 	}
-	if hello.len() < 2000 {
+	if !hello.is_empty && hello.len() < 2000 {
 		let _ = msg.channel_id.send_message(|m| m
 			.embed(|e| e
 			.title(&format!("{}",msg.author.name))
