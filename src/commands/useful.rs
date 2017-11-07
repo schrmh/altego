@@ -364,29 +364,25 @@ command!(wget(_context, msg, args) {
 			counter += 1;	
 		}
 	}
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
 	if verylongwgetlist != "" {
-		File::create(format!("{}/.lcpae/wget_list", home)).unwrap();
-		if Path::new(&format!("{}/.lcpae/wget_list", home)).exists() == true {
+		File::create(format!("{}/.lcpae/wget_list", env::home_dir().unwrap().display().to_string())).unwrap();
+		if Path::new(&format!("{}/.lcpae/wget_list", env::home_dir().unwrap().display().to_string())).exists() == true {
 			let writes = OpenOptions::new()
 				.write(true)
-				.open(format!("{}/.lcpae/wget_list", home))
+				.open(format!("{}/.lcpae/wget_list", env::home_dir().unwrap().display().to_string()))
 				.unwrap();
 			writes.set_len(0).unwrap();
 			let mut writer = BufWriter::new(&writes);
 				writer.write_all(verylongwgetlist.as_bytes()).unwrap();;
 		}
-	let file = &format!("{}/.lcpae/wget_list", home);
+	let file = &format!("{}/.lcpae/wget_list", env::home_dir().unwrap().display().to_string());
 	let path: Vec<&str> = vec![file];
 	let _ = msg.channel_id.send_files(path, |m| m.content("Use it as `wget --input-file=wget-list` in directory in which you want files to save files\n\nHave fun :D"));
-	fs::remove_file(format!("{}/.lcpae/wget_list", home)).unwrap();
+	fs::remove_file(format!("{}/.lcpae/wget_list", env::home_dir().unwrap().display().to_string())).unwrap();
 	}
 });
 command!(clist(_context, msg) {
 	let mut list = format!("**You can use commands:**");
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,
 		None => {
@@ -394,7 +390,7 @@ command!(clist(_context, msg) {
 			return Ok(());
 		},
 	};
-	for file in glob(&format!("{}/.lcpae/commands/{}/*.json",home,guild_id)).unwrap() {
+	for file in glob(&format!("{}/.lcpae/commands/{}/*.json",env::home_dir().unwrap().display().to_string(),guild_id)).unwrap() {
 		match file {
 			Ok(path_file) => {
 				let welp = path_file.display().to_string().clone();

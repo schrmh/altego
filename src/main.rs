@@ -25,9 +25,12 @@ mod commands;
 struct Handler;
 
 impl EventHandler for Handler {
-    fn on_ready(&self, ctx: Context, ready: Ready) {
+	fn on_ready(&self, ctx: Context, ready: Ready) {
         	println!("{} is connected!", ready.user.name);
 		ctx.set_game_name("lelcp.github.io/bot");
+	}
+	fn on_guild_member_addition(&self, _: Context, _: GuildId, _: Member) {
+		
 	}
 	fn on_message(&self, _: Context, message: Message) {
 		let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
@@ -72,10 +75,8 @@ impl EventHandler for Handler {
 					}
 				}
 			}
-			let home = env::var("HOME")
-				.expect("Expected a token in the environment");
-			if Path::new(&format!("{}/.lcpae/commands/{}/{}.json", home, guild_id, message.content)).exists() {
-				let path = PathBuf::from(&format!("{}/.lcpae/commands/{}/{}.json", home, guild_id, message.content));
+			if Path::new(&format!("{}/.lcpae/commands/{}/{}.json", env::home_dir().unwrap().display().to_string(), guild_id, message.content)).exists() {
+				let path = PathBuf::from(&format!("{}/.lcpae/commands/{}/{}.json", env::home_dir().unwrap().display().to_string(), guild_id, message.content));
 				let text = commands::misc::read_to_string(&path);
 				let parsed = json::parse(&text).unwrap();
 				if parsed["image"].as_str().unwrap() != "" {
@@ -85,7 +86,10 @@ impl EventHandler for Handler {
 					));
 				}
 				if parsed["text"].as_str().unwrap() != "" {
-					check_msg(message.channel_id.say(&parsed["text"].as_str().unwrap()));
+					let _ = message.channel_id.send_message(|m| m
+						.embed(|e| e
+						.description(parsed["text"].as_str().unwrap())
+					));
 				}
 			}
 		}

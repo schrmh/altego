@@ -11,8 +11,8 @@ use std::io::BufWriter;
 use std::fs::DirBuilder;
 use std::string::*;
 use serenity::client::CACHE;
-use std::env;
 use std::fs;
+use std::env;
 
 command!(clear(_context, msg, args) {
 	if args.len() == 1 {
@@ -54,8 +54,6 @@ command!(clear(_context, msg, args) {
 });
 
 command!(ccommand(_context, msg, args) {
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
 	let arg_vec = parse_quotes(&args.full());
 	let mut image = "".to_string();
 	if arg_vec.len() == 1 {
@@ -72,15 +70,15 @@ command!(ccommand(_context, msg, args) {
 				image = attachment.url;
 			}
 		}
-		if !Path::new(&format!("{}/.lcpae/commands/{}",home, guild_id)).exists() {
+		if !Path::new(&format!("{}/.lcpae/commands/{}",env::home_dir().unwrap().display().to_string(), guild_id)).exists() {
 			DirBuilder::new()
 				.recursive(true)
-				.create(format!("{}/.lcpae/commands/",home)).unwrap();
+				.create(format!("{}/.lcpae/commands/",env::home_dir().unwrap().display().to_string())).unwrap();
 			DirBuilder::new()
 				.recursive(true)
-				.create(&format!("{}/.lcpae/commands/{}/",home, guild_id)).unwrap();
+				.create(&format!("{}/.lcpae/commands/{}/",env::home_dir().unwrap().display().to_string(), guild_id)).unwrap();
 		}
-		let file = File::create(&format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).unwrap();
+		let file = File::create(&format!("{}/.lcpae/commands/{}/{}.json",env::home_dir().unwrap().display().to_string(), guild_id, alias)).unwrap();
 		file.set_len(0).unwrap();
 		let data = object!{
 	   		"text" => "",
@@ -103,15 +101,15 @@ command!(ccommand(_context, msg, args) {
 				image = attachment.url;
 			}
 		}
-		if !Path::new(&format!("{}/.lcpae/commands/{}",home, guild_id)).exists() {
+		if !Path::new(&format!("{}/.lcpae/commands/{}",env::home_dir().unwrap().display().to_string(), guild_id)).exists() {
 			DirBuilder::new()
 				.recursive(true)
-				.create(format!("{}/.lcpae/commands/",home)).unwrap();
+				.create(format!("{}/.lcpae/commands/",env::home_dir().unwrap().display().to_string())).unwrap();
 			DirBuilder::new()
 				.recursive(true)
-				.create(&format!("{}/.lcpae/commands/{}/",home, guild_id)).unwrap();
+				.create(&format!("{}/.lcpae/commands/{}/",env::home_dir().unwrap().display().to_string(), guild_id)).unwrap();
 		}
-		let file = File::create(&format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).unwrap();
+		let file = File::create(&format!("{}/.lcpae/commands/{}/{}.json",env::home_dir().unwrap().display().to_string(), guild_id, alias)).unwrap();
 		file.set_len(0).unwrap();
 		let data = object!{
 	   		"text" => arg_vec[1].as_str(),
@@ -123,8 +121,6 @@ command!(ccommand(_context, msg, args) {
 });
 
 command!(cremove(_context, msg, args) {
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
 	let arg_vec = parse_quotes(&args.full());
 	if arg_vec.len() == 1 {
 		let alias = &arg_vec[0].to_lowercase();
@@ -135,8 +131,8 @@ command!(cremove(_context, msg, args) {
 				return Ok(());
 			},
 		};
-		if Path::new(&format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).exists() == true {
-			fs::remove_file(format!("{}/.lcpae/commands/{}/{}.json",home, guild_id, alias)).unwrap();
+		if Path::new(&format!("{}/.lcpae/commands/{}/{}.json",env::home_dir().unwrap().display().to_string(), guild_id, alias)).exists() == true {
+			fs::remove_file(format!("{}/.lcpae/commands/{}/{}.json",env::home_dir().unwrap().display().to_string(), guild_id, alias)).unwrap();
 		}
 	}
 });

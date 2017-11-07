@@ -16,10 +16,8 @@ use commands;
 
 pub fn read_pierogi(userid: &str, serverid: &str) -> u8 {
 	let a=0;
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
-	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		return parsed["pierogi"].as_u8().unwrap();
@@ -28,10 +26,8 @@ pub fn read_pierogi(userid: &str, serverid: &str) -> u8 {
 }
 pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 	let a=0;
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
-	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		return parsed["ptimeout"].as_u64().unwrap();
@@ -40,10 +36,8 @@ pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 }
 pub fn read_verify(userid: &str, serverid: &str) -> u64 {
 	let a=0;
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
-	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		return parsed["verify"].as_u64().unwrap();
@@ -52,20 +46,18 @@ pub fn read_verify(userid: &str, serverid: &str) -> u64 {
 }
 pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
 	let mut verify: u64 = 0;
-	let home = env::var("HOME")
-		.expect("Expected a token in the environment");
-	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid));
+	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).exists() {
+		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid));
 		let text = commands::misc::read_to_string(&path);
 		let parsed = json::parse(&text).unwrap();
 		verify = parsed["verify"].as_u64().unwrap();
 	}
-	if !Path::new(&format!("{}/.lcpae/servers/{}", home, serverid)).exists() {
+	if !Path::new(&format!("{}/.lcpae/servers/{}", env::home_dir().unwrap().display().to_string(), serverid)).exists() {
 		DirBuilder::new()
 			.recursive(true)
-			.create(&format!("{}/.lcpae/servers/{}/",home, serverid)).unwrap();
+			.create(&format!("{}/.lcpae/servers/{}/",env::home_dir().unwrap().display().to_string(), serverid)).unwrap();
 	}
-	let file = File::create(&format!("{}/.lcpae/servers/{}/{}.json",home, serverid, userid)).unwrap();
+	let file = File::create(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).unwrap();
 	file.set_len(0).unwrap();
 	let data = object!{
    		"pierogi" => pierogi,
