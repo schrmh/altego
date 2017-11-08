@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/LelCP/altego.svg?branch=master)](https://travis-ci.org/LelCP/altego)
 # Alter Ego Discord Bot
-![LCPAE](images/logo.png)
+![LCPAE](logo.svg)
 
 Blazingly fast Discord bot written in Rust using Serenity Discord API library, features:
 * slow Serenity framework
