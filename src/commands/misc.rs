@@ -30,6 +30,7 @@ pub fn read_to_string(filename: &PathBuf) -> String {
 }
 
 pub fn gnu_replacement(content: Vec<String>) -> String {
+	// This is badly made, should replace both things at the same time
 	let mut first: &str;
 	let mut second: &str;
 	if &content.len()==&1 {
@@ -59,12 +60,16 @@ pub fn gnu_replacement(content: Vec<String>) -> String {
 }
 
 command!(gnu(_context, msg, args) {
-	let paths = vec!["images/interjection.png"];
-	let _ = msg.channel_id.send_files(paths, |m| m.content(&format!("```{}```",&gnu_replacement(parse_quotes(&args.full())))));
-
+	// Embeded Gnu text with custom GNU and Linux
+	let _ = msg.channel_id.send_message(|m| m
+		.embed(|e| e
+		.thumbnail("https://raw.githubusercontent.com/LelCP/altego/master/images/interjection.png")
+		.description(&format!("```{}```",&gnu_replacement(parse_quotes(&args.full()))))
+		));
 });
 
 command!(god(_ctx, msg) {
+	// Show rms quotes from ./pastas/stallman.txt
 	let mut count = 0;
 	let between = Range::new(-1, 47);
 	let mut rng = rand::thread_rng();
@@ -103,6 +108,7 @@ command!(god(_ctx, msg) {
 			));
 });
 command!(donkey(_ctx, msg) {
+	// Show information about server on which bot in run
 	let user_id = CACHE.read().unwrap().user.id;
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,

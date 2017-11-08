@@ -27,10 +27,11 @@ struct Handler;
 impl EventHandler for Handler {
 	fn on_ready(&self, ctx: Context, ready: Ready) {
         	println!("{} is connected!", ready.user.name);
+        	//setting "playing" to promote git repo for bot
 		ctx.set_game_name("lelcp.github.io/bot");
 	}
 	fn on_guild_member_addition(&self, _: Context, _: GuildId, _: Member) {
-		
+		// Preparing for role autojoin function, rn just an empty fn
 	}
 	fn on_message(&self, _: Context, message: Message) {
 		let guild_id = match CACHE.read().unwrap().guild_channel(message.channel_id) {
@@ -42,6 +43,10 @@ impl EventHandler for Handler {
 		};
 		if !message.author.bot {
 			if message.content.to_ascii_lowercase().contains("thx") || message.content.to_ascii_lowercase().contains("thank"){
+				/*
+				Karma function
+				There is rapid need to make it disablable
+				*/
 				let start = SystemTime::now();
 				let mut botmention = false;
 	    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
@@ -76,9 +81,14 @@ impl EventHandler for Handler {
 				}
 			}
 			if Path::new(&format!("{}/.lcpae/commands/{}/{}.json", env::home_dir().unwrap().display().to_string(), guild_id, message.content)).exists() {
+				/*
+				Custom commands:
+				even though most of the bot will be moving to db, this part will be json for simplicity's sake
+				*/
 				let path = PathBuf::from(&format!("{}/.lcpae/commands/{}/{}.json", env::home_dir().unwrap().display().to_string(), guild_id, message.content));
 				let text = commands::misc::read_to_string(&path);
 				let parsed = json::parse(&text).unwrap();
+				// image and text parts should be connected
 				if parsed["image"].as_str().unwrap() != "" {
 					let _ = message.channel_id.send_message(|m| m
 						.embed(|e| e
@@ -103,10 +113,12 @@ fn main() {
 	let mut client = Client::new(&token, Handler);
 	client.with_framework(StandardFramework::new()
 		.before(|_ctx, msg, _cmd_name| {
+			//inform of every command (except custom command, karma (should be fixed))
 			println!("{} in {}: {}", msg.author.id, msg.channel_id, msg.content);
 			true
 		})
 		.after(|_ctx, _msg, cmd_name, error| {
+			//post error if one happened
 			if let Err(why) = error {
 				println!("Error in {}: {:?}", cmd_name, why);
 			}

@@ -61,6 +61,7 @@ pub fn read_ddg(res: &str, num: i8) -> String {
 }
 
 fn open_ddg(res: &str) -> String {
+	// TODO Native TLS to night_core
 	let ssl = NativeTlsClient::new().unwrap();
 	let connector = HttpsConnector::new(ssl);
 	let client = Client::with_connector(connector);
@@ -91,6 +92,7 @@ impl Result {
 }
 
 command!(ddg(_context, msg) {
+	// Too complicated for its own good, search command for DDG
 	let mut welp = commands::misc::replace("!ddg ", &msg.content, "");
 	if welp == "" || welp == " " {
 		welp = "!ddg".to_string();
@@ -167,6 +169,7 @@ command!(ddg(_context, msg) {
 });
 
 command!(emoji(_context, msg, args) {
+	// shows emoji text replacing original message with it
 	match msg.delete() {
 		Ok(val)  => val,
 		Err(_err) => (),
@@ -239,6 +242,7 @@ command!(emoji(_context, msg, args) {
 });
 
 command!(info(_context, msg, args) {
+	// Should be a module, basically shows informations from folder, about important tech stuff
 	if args.len() == 0 {
 		let mut list = format!("**You can learn about:**");
 		let mut infocommand = "".to_string();
@@ -302,6 +306,7 @@ command!(info(_context, msg, args) {
 });
 
 command!(wget(_context, msg, args) {
+	// Used for archival reason, TODO making it more precise than 100 messages
 	let mut verylongwgetlist = "".to_string();
 	let mut msg_id = msg.id;
 	let mut counter=0;
@@ -311,14 +316,14 @@ command!(wget(_context, msg, args) {
 			for vec in msg.channel_id.messages(|g| g.before(msg_id).limit(100)) {
 				for message in vec {
 					for attachment in message.attachments {
-						if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
+						if attachment.url.starts_with("http") && attachment.url.ends_with("jpg") || attachment.url.ends_with("png") || attachment.url.ends_with("jpeg") {
 							verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
 						}
 					}
 					let mut split = message.content.split(' ');
 					for link in split {
-						if link.contains("http") {
-							if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
+						if link.starts_with("http") {
+							if link.ends_with("jpg") || link.ends_with("png") || link.ends_with("jpeg") {
 								verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
 							}
 						}
@@ -342,14 +347,14 @@ command!(wget(_context, msg, args) {
 			for vec in msg.channel_id.messages(|g| g.after(msg_id).limit(100)) {
 				for message in vec {
 					for attachment in message.attachments {
-						if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") {
+						if attachment.url.starts_with("http") && attachment.url.ends_with("jpg") || attachment.url.ends_with("png") || attachment.url.ends_with("jpeg") {
 							verylongwgetlist = format!("{}{}\n",verylongwgetlist,attachment.url);
 						}
 					}
 					let mut split = message.content.split(' ');
 					for link in split {
-						if link.contains("http") {
-							if link.contains("jpg") || link.contains("png") || link.contains("jpeg") {
+						if link.starts_with("http") {
+							if link.ends_with("jpg") || link.ends_with("png") || link.ends_with("jpeg") {
 								verylongwgetlist = format!("{}{}\n",verylongwgetlist,link);
 							}
 						}
@@ -382,6 +387,7 @@ command!(wget(_context, msg, args) {
 	}
 });
 command!(clist(_context, msg) {
+	// Listing custom commands, folder of server containing jsons with commmands
 	let mut list = format!("**You can use commands:**");
 	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
 		Some(channel) => channel.read().unwrap().guild_id,

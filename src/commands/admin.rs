@@ -15,6 +15,7 @@ use std::fs;
 use std::env;
 
 command!(clear(_context, msg, args) {
+	// Clearing messages from channel; loads list of message, changes into messageid and clears messages
 	if args.len() == 1 {
 		let countdown: u64 = args.find().unwrap_or_default();
 		for vec in msg.channel_id.messages(|g| g.before(msg.id).limit(countdown)) {
@@ -30,6 +31,8 @@ command!(clear(_context, msg, args) {
 		}
 		let _=msg.channel_id.send_message(|m| m.content(format!("Deleted {} messages",countdown)));
 	}
+	// TODO: In this place command is really slow, making bot lag as a whole. Needs clever fix I haven't thought about yet
+	// Should be deleting <amount of messages> <nth messages where to start deletion from below>
 	else if args.len() == 2 {
 		let countdown: u64 = args.find().unwrap_or_default();
 		let counter: u64 = args.find().unwrap_or_default();
@@ -54,6 +57,7 @@ command!(clear(_context, msg, args) {
 });
 
 command!(ccommand(_context, msg, args) {
+	// Creator for custom commands, checks if there is attachment and loads it into json to be used later
 	let arg_vec = parse_quotes(&args.full());
 	let mut image = "".to_string();
 	if arg_vec.len() == 1 {
@@ -66,7 +70,7 @@ command!(ccommand(_context, msg, args) {
 			},
 		};
 		for attachment in msg.clone().attachments {
-			if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") || attachment.url.contains("gif") {
+			if attachment.url.ends_with("jpg") || attachment.url.ends_with("png") || attachment.url.ends_with("jpeg") || attachment.url.ends_with("gif") {
 				image = attachment.url;
 			}
 		}
@@ -97,7 +101,7 @@ command!(ccommand(_context, msg, args) {
 			},
 		};
 		for attachment in msg.clone().attachments {
-			if attachment.url.contains("jpg") || attachment.url.contains("png") || attachment.url.contains("jpeg") || attachment.url.contains("gif") {
+			if attachment.url.ends_with("jpg") || attachment.url.ends_with("png") || attachment.url.ends_with("jpeg") || attachment.url.ends_with("gif") {
 				image = attachment.url;
 			}
 		}
@@ -121,6 +125,7 @@ command!(ccommand(_context, msg, args) {
 });
 
 command!(cremove(_context, msg, args) {
+	// Removing custom command, by removing json
 	let arg_vec = parse_quotes(&args.full());
 	if arg_vec.len() == 1 {
 		let alias = &arg_vec[0].to_lowercase();
