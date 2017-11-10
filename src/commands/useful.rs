@@ -111,49 +111,6 @@ command!(ddg(_context, msg) {
 	let response = query.execute().unwrap();
 	let colour = Colour::from_rgb(153, 31, 163);
 	let new = commands::misc::replace(" " ,&duckurl, "+");
-	if response.definition_url != ""{
-		let mut footer = CreateEmbedFooter::default()
-			.text(&new)
-			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
-		let _ = msg.channel_id.send_message(|m| m
-			.embed(|e| e
-			.title(&format!("Based on {} article",&response.definition_source))
-			.footer(|_| footer)
-			.colour(colour)
-			.thumbnail(&response.image)
-			.description(&format!("{}\n\n*Read more:* <{}>",&response.definition,&response.definition_url))
-			.url(&new)
-			));
-	}
-	else if response.abstract_url != ""{
-		let mut footer = CreateEmbedFooter::default()
-			.text(&new)
-			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
-		let _ = msg.channel_id.send_message(|m| m
-			.embed(|e| e
-			.title(&format!("Based on {} article",&response.abstract_source))
-			.colour(colour)
-			.footer(|_| footer)
-			.thumbnail(&response.image)
-			.description(&format!("{}\n\n*Read more:* <{}>",&response.abstract_text,&response.abstract_url))
-			.url(&new)
-			));
-	}
-	else if response.redirect != ""{
-		let mut footer = CreateEmbedFooter::default()
-			.text(&new)
-			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
-		let _ = msg.channel_id.send_message(|m| m
-			.embed(|e| e
-			.title("Redirect!")
-			.footer(|_| footer)
-			.colour(colour)
-			.thumbnail(&response.image)
-			.description(&format!("{}",&response.redirect))
-			.url(&new)
-			));
-	}
-	else {
 		let mut footer = CreateEmbedFooter::default()
 			.text(&new)
 			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
@@ -165,7 +122,6 @@ command!(ddg(_context, msg) {
 			.url(&new)
 			.description(&read_ddg(&help, 3))
 			));
-	}
 });
 
 command!(emoji(_context, msg, args) {
