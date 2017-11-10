@@ -2,7 +2,6 @@ extern crate hyper;
 extern crate select;
 extern crate hyper_native_tls;
 extern crate url;
-extern crate ddg;
 extern crate serenity;
 extern crate rand;
 extern crate glob;
@@ -18,7 +17,6 @@ use self::select::node::Node;
 use self::hyper_native_tls::NativeTlsClient;
 use self::hyper::net::HttpsConnector;
 use self::url::percent_encoding::percent_decode;
-use self::ddg::Query;
 use serenity::utils::Colour;
 use serenity::utils::builder::CreateEmbedFooter;
 use rand::distributions::{IndependentSample, Range};
@@ -97,20 +95,17 @@ command!(ddg(_context, msg) {
 	if welp == "" || welp == " " {
 		welp = "!ddg".to_string();
 	}
-	let mut query: Query;
 	let mut help = welp.to_string();
 	if welp.to_string().len() > 500 {
 		
 		help = "buffer overflow".parse().unwrap_or_default();
-		query = Query::new(help.clone(), "lcpapp".to_string()).no_html();
 	}
 	else {
-		query = Query::new(help.clone(), "lcpapp".to_string()).no_html();
 	}
 	let duckurl = format!("http://duckduckgo.com/?q={}", &help);
-	let response = query.execute().unwrap();
 	let colour = Colour::from_rgb(153, 31, 163);
 	let new = commands::misc::replace(" " ,&duckurl, "+");
+	if !help.contains("!") {
 		let mut footer = CreateEmbedFooter::default()
 			.text(&new)
 			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
@@ -122,6 +117,20 @@ command!(ddg(_context, msg) {
 			.url(&new)
 			.description(&read_ddg(&help, 3))
 			));
+	}
+	else {
+		let mut footer = CreateEmbedFooter::default()
+			.text(&new)
+			.icon_url("https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png");
+		let _ = msg.channel_id.send_message(|m| m
+			.embed(|e| e
+			.title(&format!("Results from :duck::duck::goal: for query \"{}\"",&help))
+			.footer(|_| footer)
+			.colour(colour)
+			.url(&new)
+			.description(format!("Redirect to: <{}>", new))
+			));
+	}
 });
 
 command!(emoji(_context, msg, args) {
