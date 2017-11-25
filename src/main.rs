@@ -133,6 +133,9 @@ fn main() {
 				.desc("GNU Interjection copypasta")
 				.usage("<GNU replacement> <Linux replacement>")
 				.exec(commands::misc::gnu))
+			.command("roll", |c| c
+				.desc("Rolling is fucking complex, I have no idea how to describe it shortly")
+				.exec(commands::misc::roll))
 			.command("godtellmeyourways", |c| c
 				.desc("Quote God himself, Richard Matthew Stallman")
 				.exec(commands::misc::god))

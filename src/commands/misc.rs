@@ -125,3 +125,41 @@ command!(donkey(_ctx, msg) {
 		Err(err) => return Err(err.into()),
 	};
 });
+command!(roll(_ctx, msg, args) {
+	if args.len() == 0 {
+		let between = Range::new(1, 6);
+		let mut rng = rand::thread_rng();
+		let random = between.ind_sample(&mut rng);
+		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", random, msg.author.id)));
+	}
+	else if args.len() == 1 {
+	let finish: u64 = match args[0].parse() {
+		Ok(val)  => val,
+		Err(_err) => 6,
+	};
+		let between = Range::new(1, finish);
+		let mut rng = rand::thread_rng();
+		let random = between.ind_sample(&mut rng);
+		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", random, msg.author.id)));
+	}
+	else if args.len() == 2 {
+	let start: u64 = match args[0].parse() {
+		Ok(val)  => val,
+		Err(_err) => 6,
+	};
+	let finish: u64 = match args[1].parse() {
+		Ok(val)  => val,
+		Err(_err) => 6,
+	};
+		let between = Range::new(start, finish);
+		let mut rng = rand::thread_rng();
+		let random = between.ind_sample(&mut rng);
+		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", random, msg.author.id)));
+	}
+	else {
+		let between = Range::new(0, args.len());
+		let mut rng = rand::thread_rng();
+		let random = between.ind_sample(&mut rng);
+		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", args[random], msg.author.id)));
+	}
+});
