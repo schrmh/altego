@@ -145,7 +145,7 @@ command!(roll(_ctx, msg, args) {
 	else if args.len() == 2 {
 	let start: u64 = match args[0].parse() {
 		Ok(val)  => val,
-		Err(_err) => 6,
+		Err(_err) => 1,
 	};
 	let finish: u64 = match args[1].parse() {
 		Ok(val)  => val,
