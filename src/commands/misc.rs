@@ -133,24 +133,26 @@ command!(roll(_ctx, msg, args) {
 		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", random, msg.author.id)));
 	}
 	else if args.len() == 1 {
-	let finish: u64 = match args[0].parse() {
+	let mut finish: u64 = match args[0].parse() {
 		Ok(val)  => val,
 		Err(_err) => 6,
 	};
+	if finish == 0 { finish = 1; }
 		let between = Range::new(1, finish+1);
 		let mut rng = rand::thread_rng();
 		let random = between.ind_sample(&mut rng);
 		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", random, msg.author.id)));
 	}
 	else if args.len() == 2 {
-	let start: u64 = match args[0].parse() {
+	let mut start: u64 = match args[0].parse() {
 		Ok(val)  => val,
 		Err(_err) => 1,
 	};
-	let finish: u64 = match args[1].parse() {
+	let mut finish: u64 = match args[1].parse() {
 		Ok(val)  => val,
 		Err(_err) => 6,
 	};
+	if finish <= start { start = 1; finish = 6; }
 		let between = Range::new(start, finish+1);
 		let mut rng = rand::thread_rng();
 		let random = between.ind_sample(&mut rng);
