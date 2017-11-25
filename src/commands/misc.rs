@@ -137,7 +137,7 @@ command!(roll(_ctx, msg, args) {
 		Ok(val)  => val,
 		Err(_err) => 6,
 	};
-		let between = Range::new(1, finish);
+		let between = Range::new(1, finish+1);
 		let mut rng = rand::thread_rng();
 		let random = between.ind_sample(&mut rng);
 		let _= msg.channel_id.send_message(|m| m.content(format!("{} is the answer <@{}>", random, msg.author.id)));
