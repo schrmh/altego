@@ -122,7 +122,7 @@ command!(give(_context, msg) {
 		if read_pierogi(&msg.author.id.to_string(),&guild_id.to_string()) > 0 {
 			new_pierogi(&msg.author.id.to_string(), &guild_id.to_string(), read_pierogi(&msg.author.id.to_string(),&guild_id.to_string()) - 1, time_pierogi(&msg.author.id.to_string(),&guild_id.to_string()));
 			new_pierogi(&mention.to_string(), &guild_id.to_string(), read_pierogi(&mention.to_string(),&guild_id.to_string()) + 1, time_pierogi(&mention.to_string(),&guild_id.to_string()));
-			let _= msg.channel_id.send_message(|m| m.content(format!("<@{}>, You gave pierog to <@{}>", mention, msg.author.id)));
+			let _= msg.channel_id.send_message(|m| m.content(format!("<@{}>, You gave pierog to <@{}>", msg.author.id, mention)));
 		}
 	}
 
