@@ -34,16 +34,6 @@ pub fn time_pierogi(userid: &str, serverid: &str) -> u64 {
 	}
 	return a;
 }
-pub fn read_verify(userid: &str, serverid: &str) -> u64 {
-	let a=0;
-	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).exists() {
-		let path = PathBuf::from(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid));
-		let text = commands::misc::read_to_string(&path);
-		let parsed = json::parse(&text).unwrap();
-		return parsed["verify"].as_u64().unwrap();
-	}
-	return a;
-}
 pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
 	let mut verify: u64 = 0;
 	if Path::new(&format!("{}/.lcpae/servers/{}/{}.json",env::home_dir().unwrap().display().to_string(), serverid, userid)).exists() {
@@ -69,8 +59,8 @@ pub fn new_pierogi(userid: &str, serverid: &str, pierogi: u8, time: u64){
 }
 
 command!(score(_context, msg) {
-	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
+	let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().guild_id,
 		None => {
 			let _= msg.channel_id.send_message(|m| m.content(&"Groups and DMs not supported"));
 			return Ok(());
@@ -80,8 +70,8 @@ command!(score(_context, msg) {
 });
 
 command!(steal(_context, msg) {
-	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
+	let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().guild_id,
 		None => {
 			let _= msg.channel_id.send_message(|m| m.content(&"Groups and DMs not supported"));
 			return Ok(());
@@ -110,8 +100,8 @@ command!(steal(_context, msg) {
 });
 
 command!(give(_context, msg) {
-	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
+	let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().guild_id,
 		None => {
 			let _= msg.channel_id.send_message(|m| m.content(&"Groups and DMs not supported"));
 			return Ok(());

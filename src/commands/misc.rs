@@ -7,7 +7,7 @@ use self::regex::Regex;
 use std::path::PathBuf;
 use std::string::*;
 use serenity::utils::Colour;
-use serenity::utils::builder::CreateEmbedFooter;
+use serenity::builder::CreateEmbedFooter;
 use serenity::client::CACHE;
 use serenity::utils::parse_quotes;
 use chrono::*;
@@ -45,9 +45,9 @@ pub fn gnu_replacement(content: Vec<String>) -> String {
 		first = "";
 		second = "";
 	}
-	let mut gnu = File::open("pastas/gnu.txt").expect("opening file");
+	let mut gnufile = File::open("pastas/gnu.txt").expect("opening file");
 	let mut gnutext = String::new();
-	gnu.read_to_string(&mut gnutext).expect("reading file");
+	gnufile.read_to_string(&mut gnutext).expect("reading file");
 	if second == "" {
 		second = "GNU";
 	}
@@ -59,12 +59,12 @@ pub fn gnu_replacement(content: Vec<String>) -> String {
 	return replace("`", &replacing_linux, "");
 }
 
-command!(gnu(_context, msg, args) {
+command!(gnu(_context, msg, arg) {
 	// Embeded Gnu text with custom GNU and Linux
 	let _ = msg.channel_id.send_message(|m| m
 		.embed(|e| e
 		.thumbnail("https://raw.githubusercontent.com/LelCP/altego/master/images/interjection.png")
-		.description(&format!("```{}```",&gnu_replacement(parse_quotes(&args.full()))))
+		.description(&format!("```{}```",&gnu_replacement(parse_quotes(&arg))))
 		));
 });
 
@@ -109,9 +109,9 @@ command!(god(_ctx, msg) {
 });
 command!(donkey(_ctx, msg) {
 	// Show information about server on which bot in run
-	let user_id = CACHE.read().unwrap().user.id;
-	let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-		Some(channel) => channel.read().unwrap().guild_id,
+	let user_id = CACHE.read().user.id;
+	let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+		Some(channel) => channel.read().guild_id,
 		None => {
 			let _= msg.channel_id.send_message(|m| m.content(&"Groups and DMs not supported"));
 			return Ok(());
@@ -125,7 +125,8 @@ command!(donkey(_ctx, msg) {
 		Err(err) => return Err(err.into()),
 	};
 });
-command!(roll(_ctx, msg, args) {
+command!(roll(_ctx, msg, arg) {
+	let args: Vec<String> = arg.multiple().unwrap();
 	if args.len() == 0 {
 		let between = Range::new(1, 7);
 		let mut rng = rand::thread_rng();

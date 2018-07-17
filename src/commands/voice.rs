@@ -1,11 +1,17 @@
-use serenity::client::CACHE;
-use serenity::model::*;
+//! Part of Serenity
+
+use serenity::client::{CACHE};
+use serenity::model::channel::Message;
+use serenity::model::misc::Mentionable;
+
 use serenity::voice;
 use serenity::Result as SerenityResult;
 
+use VoiceManager;
+
 command!(deafen(ctx, msg) {
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+    let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+        Some(channel) => channel.read().guild_id,
         None => {
             check_msg(msg.channel_id.say("Groups and DMs not supported"));
 
@@ -13,9 +19,10 @@ command!(deafen(ctx, msg) {
         },
     };
 
-    let mut shard = ctx.shard.lock();
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
 
-    let handler = match shard.manager.get(guild_id) {
+    let handler = match manager.get_mut(guild_id) {
         Some(handler) => handler,
         None => {
             check_msg(msg.reply("Not in a voice channel"));
@@ -33,41 +40,46 @@ command!(deafen(ctx, msg) {
     }
 });
 
-command!(join(ctx, msg, args) {
-    let connect_to = match args.get(0) {
-        Some(arg) => match arg.parse::<u64>() {
-            Ok(id) => ChannelId(id),
-            Err(_why) => {
-                check_msg(msg.reply("Invalid voice channel ID given"));
-
-                return Ok(());
-            },
-        },
-        None => {
-            check_msg(msg.reply("Requires a voice channel ID be given"));
-
-            return Ok(());
-        },
-    };
-
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+command!(join(ctx, msg) {
+    let guild = match msg.guild() {
+        Some(guild) => guild,
         None => {
             check_msg(msg.channel_id.say("Groups and DMs not supported"));
 
             return Ok(());
-        },
+        }
     };
 
-    let mut shard = ctx.shard.lock();
-    shard.manager.join(guild_id, connect_to);
+    let guild_id = guild.read().id;
 
-    check_msg(msg.channel_id.say(&format!("Joined {}", connect_to.mention())));
+    let channel_id = guild
+        .read()
+        .voice_states.get(&msg.author.id)
+        .and_then(|voice_state| voice_state.channel_id);
+
+
+    let connect_to = match channel_id {
+        Some(channel) => channel,
+        None => {
+            check_msg(msg.reply("Not in a voice channel"));
+
+            return Ok(());
+        }
+    };
+
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
+
+    if manager.join(guild_id, connect_to).is_some() {
+        check_msg(msg.channel_id.say(&format!("Joined {}", connect_to.mention())));
+    } else {
+        check_msg(msg.channel_id.say("Error joining the channel"));
+    }
 });
 
 command!(leave(ctx, msg) {
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+    let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+        Some(channel) => channel.read().guild_id,
         None => {
             check_msg(msg.channel_id.say("Groups and DMs not supported"));
 
@@ -75,11 +87,12 @@ command!(leave(ctx, msg) {
         },
     };
 
-    let mut shard = ctx.shard.lock();
-    let has_handler = shard.manager.get(guild_id).is_some();
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
+    let has_handler = manager.get(guild_id).is_some();
 
     if has_handler {
-        shard.manager.remove(guild_id);
+        manager.remove(guild_id);
 
         check_msg(msg.channel_id.say("Left voice channel"));
     } else {
@@ -88,8 +101,8 @@ command!(leave(ctx, msg) {
 });
 
 command!(mute(ctx, msg) {
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+    let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+        Some(channel) => channel.read().guild_id,
         None => {
             check_msg(msg.channel_id.say("Groups and DMs not supported"));
 
@@ -97,9 +110,10 @@ command!(mute(ctx, msg) {
         },
     };
 
-    let mut shard = ctx.shard.lock();
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
 
-    let handler = match shard.manager.get(guild_id) {
+    let handler = match manager.get_mut(guild_id) {
         Some(handler) => handler,
         None => {
             check_msg(msg.reply("Not in a voice channel"));
@@ -117,10 +131,14 @@ command!(mute(ctx, msg) {
     }
 });
 
+command!(ping(_context, msg) {
+    check_msg(msg.channel_id.say("Pong!"));
+});
+
 command!(play(ctx, msg, args) {
-    let url = match args.get(0) {
-        Some(url) => url,
-        None => {
+    let url = match args.single::<String>() {
+        Ok(url) => url,
+        Err(_) => {
             check_msg(msg.channel_id.say("Must provide a URL to a video or audio"));
 
             return Ok(());
@@ -133,8 +151,8 @@ command!(play(ctx, msg, args) {
         return Ok(());
     }
 
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+    let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+        Some(channel) => channel.read().guild_id,
         None => {
             check_msg(msg.channel_id.say("Error finding channel info"));
 
@@ -142,8 +160,11 @@ command!(play(ctx, msg, args) {
         },
     };
 
-    if let Some(handler) = ctx.shard.lock().manager.get(guild_id) {
-        let source = match voice::ytdl(url) {
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
+
+    if let Some(handler) = manager.get_mut(guild_id) {
+        let source = match voice::ytdl(&url) {
             Ok(source) => source,
             Err(why) => {
                 println!("Err starting source: {:?}", why);
@@ -163,8 +184,8 @@ command!(play(ctx, msg, args) {
 });
 
 command!(undeafen(ctx, msg) {
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+    let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+        Some(channel) => channel.read().guild_id,
         None => {
             check_msg(msg.channel_id.say("Error finding channel info"));
 
@@ -172,7 +193,10 @@ command!(undeafen(ctx, msg) {
         },
     };
 
-    if let Some(handler) = ctx.shard.lock().manager.get(guild_id) {
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
+
+    if let Some(handler) = manager.get_mut(guild_id) {
         handler.deafen(false);
 
         check_msg(msg.channel_id.say("Undeafened"));
@@ -182,16 +206,18 @@ command!(undeafen(ctx, msg) {
 });
 
 command!(unmute(ctx, msg) {
-    let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-        Some(channel) => channel.read().unwrap().guild_id,
+    let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+        Some(channel) => channel.read().guild_id,
         None => {
             check_msg(msg.channel_id.say("Error finding channel info"));
 
             return Ok(());
         },
     };
+    let mut manager_lock = ctx.data.lock().get::<VoiceManager>().cloned().unwrap();
+    let mut manager = manager_lock.lock();
 
-    if let Some(handler) = ctx.shard.lock().manager.get(guild_id) {
+    if let Some(handler) = manager.get_mut(guild_id) {
         handler.mute(false);
 
         check_msg(msg.channel_id.say("Unmuted"));

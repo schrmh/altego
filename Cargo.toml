@@ -6,7 +6,7 @@ authors = ["LCP <letcp@protonmail.com>"]
 [dependencies]
 ansi_term = "0.10.2"
 regex = "0.2.2"
-ddg = "0.4.2"
+ddg = "0.5.0"
 hyper = "0.10.13"
 select = "0.4.2"
 hyper-native-tls = "0.2.4"
@@ -19,9 +19,10 @@ tokio-core = "0.1.10"
 glob = "0.2.11"
 json = "0.11.10"
 lazy_static = "0.2.9"
+typemap = "0.3.3"
 
 [dependencies.serenity]
-version = "0.4.3"
+version = "0.5.1"
 features = ["cache", "framework", "standard_framework", "voice"]
 
 [dependencies.chrono]

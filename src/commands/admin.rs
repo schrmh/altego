@@ -62,8 +62,8 @@ command!(ccommand(_context, msg, args) {
 	let mut image = "".to_string();
 	if arg_vec.len() == 1 {
 		let alias = &arg_vec[0].to_lowercase();
-		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-			Some(channel) => channel.read().unwrap().guild_id,
+		let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+			Some(channel) => channel.read().guild_id,
 			None => {
 				let _ = msg.channel_id.send_message(|m| m.content("Groups and DMs not supported"));
 				return Ok(());
@@ -93,8 +93,8 @@ command!(ccommand(_context, msg, args) {
 	}
 	else if arg_vec.len() == 2 {
 		let alias = &arg_vec[0].to_lowercase();
-		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-			Some(channel) => channel.read().unwrap().guild_id,
+		let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+			Some(channel) => channel.read().guild_id,
 			None => {
 				let _ = msg.channel_id.send_message(|m| m.content("Groups and DMs not supported"));
 				return Ok(());
@@ -129,8 +129,8 @@ command!(cremove(_context, msg, args) {
 	let arg_vec = parse_quotes(&args.full());
 	if arg_vec.len() == 1 {
 		let alias = &arg_vec[0].to_lowercase();
-		let guild_id = match CACHE.read().unwrap().guild_channel(msg.channel_id) {
-			Some(channel) => channel.read().unwrap().guild_id,
+		let guild_id = match CACHE.read().guild_channel(msg.channel_id) {
+			Some(channel) => channel.read().guild_id,
 			None => {
 				let _ = msg.channel_id.send_message(|m| m.content("Groups and DMs not supported"));
 				return Ok(());
