@@ -41,24 +41,21 @@ impl EventHandler for Handler {
 		ctx.set_game_name("with fire");
 	}
 	fn message(&self, _: Context, message: Message) {
-		let guild_id = match CACHE.read().guild_channel(message.channel_id) {
-			Some(channel) => channel.read().guild_id,
-			None => {
-				let _ = message.channel_id.send_message(|m| m.content(&"Groups and DMs not supported"));
-				return ();
-			},
-		};
 		if !message.author.bot {
 			if message.content.to_ascii_lowercase().contains("thx") || message.content.to_ascii_lowercase().contains("thank"){
-				/*
-				Karma function
-				There is rapid need to make it disablable
-				*/
 				let start = SystemTime::now();
 				let mut botmention = false;
 	    			let since_the_epoch = start.duration_since(UNIX_EPOCH)
 	       			.expect("Time went backwards");
 	       			if message.mentions.len() > 0 {
+					let guild_id = match CACHE.read().guild_channel(message.channel_id) {
+						Some(channel) => channel.read().guild_id,
+						None => {
+							let _ = message.channel_id.send_message(|m| m.content(&"Groups and DMs not supported"));
+							return ();
+						},
+					};
+				
 				if since_the_epoch.as_secs() >= commands::pierogi::time_pierogi(&message.author.id.to_string(),&guild_id.to_string()) {
 					let mut msg: String = "".to_string();
 						for mention in message.mentions {
